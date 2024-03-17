@@ -6,12 +6,22 @@
 
 ### Fix
 
+<<<<<<< HEAD
+=======
+* fix: fix pyproject.toml ([`6b57155`](https://github.com/diasatta/bricka/commit/6b57155696755e16b18b82026c24e8c82094daef))
+
+>>>>>>> a54c26d (0.1.9)
 * fix: fix tests ([`e8f0350`](https://github.com/diasatta/bricka/commit/e8f0350f0c432dd3a58c530f0733d971774567db))
 
 * fix: fix tests ([`04bd656`](https://github.com/diasatta/bricka/commit/04bd6565c711a950bfa63f65a468bc211405a954))
 
 ### Unknown
 
+<<<<<<< HEAD
+=======
+* Merge branch &#39;develop&#39; ([`23fa829`](https://github.com/diasatta/bricka/commit/23fa829e3087763873c754bd0d2d8d859bc1267b))
+
+>>>>>>> a54c26d (0.1.9)
 * Merge branch &#39;develop&#39; ([`71eb0a7`](https://github.com/diasatta/bricka/commit/71eb0a71d75e1b0054ae96078e87804111a56218))
 
 
