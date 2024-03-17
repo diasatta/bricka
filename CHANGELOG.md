@@ -2,6 +2,17 @@
 
 
 
+## v0.1.12 (2024-03-17)
+
+### Build
+
+* build: fix ci-cd.yml ([`f20ad08`](https://github.com/diasatta/bricka/commit/f20ad08e6dee46f0559a522356602aafb6b147d5))
+
+### Fix
+
+* fix: fix tests ([`f9d0453`](https://github.com/diasatta/bricka/commit/f9d04533ccde20063553c209fa49d506c2fc97fb))
+
+
 ## v0.1.11 (2024-03-17)
 
 ### Fix
