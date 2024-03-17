@@ -10,3 +10,4 @@ class Test():
     assert 4 == 4
     assert 5 == 5
     assert 6 == 6
+    assert 7 == 7
