@@ -2,6 +2,19 @@
 
 
 
+## v0.1.9 (2024-03-17)
+
+### Fix
+
+* fix: fix tests ([`e8f0350`](https://github.com/diasatta/bricka/commit/e8f0350f0c432dd3a58c530f0733d971774567db))
+
+* fix: fix tests ([`04bd656`](https://github.com/diasatta/bricka/commit/04bd6565c711a950bfa63f65a468bc211405a954))
+
+### Unknown
+
+* Merge branch &#39;develop&#39; ([`71eb0a7`](https://github.com/diasatta/bricka/commit/71eb0a71d75e1b0054ae96078e87804111a56218))
+
+
 ## v0.1.8 (2024-03-17)
 
 ### Unknown
