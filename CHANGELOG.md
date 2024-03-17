@@ -2,6 +2,13 @@
 
 
 
+## v0.1.7 (2024-03-17)
+
+### Fix
+
+* fix: fix ci-cd.yml ([`d42d51d`](https://github.com/diasatta/bricka/commit/d42d51d2f13d731d29788f8d895597fc264505e7))
+
+
 ## v0.1.6 (2024-03-17)
 
 ### Fix
