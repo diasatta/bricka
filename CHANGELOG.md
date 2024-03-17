@@ -2,6 +2,19 @@
 
 
 
+## v0.1.6 (2024-03-17)
+
+### Fix
+
+* fix: fix tests to check CI/CD ([`c6b50d6`](https://github.com/diasatta/bricka/commit/c6b50d6ab5d4d53a5baf77cadebb6eaa71e300c0))
+
+* fix: fix tests to check CI/CD ([`6040d8e`](https://github.com/diasatta/bricka/commit/6040d8e1a14a4f50520765713a3e90dc11e69d8d))
+
+### Unknown
+
+* Merge branch &#39;develop&#39; ([`173efab`](https://github.com/diasatta/bricka/commit/173efab9f3b950296f5d17e14b91095af973b055))
+
+
 ## v0.1.5 (2024-03-17)
 
 ### Build
