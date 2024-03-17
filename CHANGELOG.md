@@ -2,6 +2,21 @@
 
 
 
+## v0.1.5 (2024-03-17)
+
+### Build
+
+* build: update tests ([`959ac5c`](https://github.com/diasatta/bricka/commit/959ac5c682f28bbc08a4978cb7f0a4feb09ecc1b))
+
+### Fix
+
+* fix: fix ci-cd.yml to automatically build package ([`1546ec5`](https://github.com/diasatta/bricka/commit/1546ec5ef7326d064069d8ce73ba9ee7862248ee))
+
+### Unknown
+
+* Merge branch &#39;develop&#39; ([`cdffc04`](https://github.com/diasatta/bricka/commit/cdffc04a873938a035917d771ced6b78072e103b))
+
+
 ## v0.1.4 (2024-03-17)
 
 ### Build
