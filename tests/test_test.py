@@ -12,4 +12,3 @@ class Test():
     assert 6 == 6
     assert 7 == 7
     assert 8 == 8
-    assert 9 == 9
