@@ -2,11 +2,20 @@
 
 
 
+## v0.1.8 (2024-03-17)
+
+### Unknown
+
+* Merge branch &#39;develop&#39; ([`86ed491`](https://github.com/diasatta/bricka/commit/86ed49103e242c0c72c4ad84dad0637dfd79e2ce))
+
+
 ## v0.1.7 (2024-03-17)
 
 ### Fix
 
 * fix: fix ci-cd.yml ([`d42d51d`](https://github.com/diasatta/bricka/commit/d42d51d2f13d731d29788f8d895597fc264505e7))
+
+* fix: fix ci-cd.yml ([`c66f83e`](https://github.com/diasatta/bricka/commit/c66f83ea32bd192d86ab4d4702476ab7528e2e28))
 
 
 ## v0.1.6 (2024-03-17)
