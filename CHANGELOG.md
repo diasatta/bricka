@@ -2,6 +2,13 @@
 
 
 
+## v0.1.11 (2024-03-17)
+
+### Fix
+
+* fix: fix tests ([`1ac00c1`](https://github.com/diasatta/bricka/commit/1ac00c1129c0c6cf4dcec4362e77b1f057e1f2a1))
+
+
 ## v0.1.10 (2024-03-17)
 
 ### Fix
