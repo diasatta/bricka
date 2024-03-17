@@ -71,8 +71,8 @@ jobs:
       with:
         password: ${{ secrets.PYPI_API_TOKEN }}    
         
-    # - name: Publish package distributions to GitHub Releases
-    #   uses: python-semantic-release/upload-to-gh-release@main
-    #   if: steps.release.outputs.released == 'true'
-    #   with:
-    #     github_token: ${{ secrets.GH_TOKEN }}    
+    - name: Publish package distributions to GitHub Releases
+      uses: python-semantic-release/upload-to-gh-release@main
+      # if: steps.release.outputs.released == 'true'
+      with:
+        github_token: ${{ secrets.GH_TOKEN }}    
