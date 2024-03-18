@@ -118,7 +118,7 @@ class Node(ABC):
     return self.insert(node)
   
   def at(self, index: int) -> "Node | None":
-    if self._nodes:
+    if len(self._nodes) > index:
       return self._nodes[index]
     
     return None
@@ -130,7 +130,7 @@ class Node(ABC):
     return self.at(-1) 
   
   def take_at(self, index: int) -> "Node | None":
-    if self._nodes:
+    if len(self._nodes) > index:
       node = self._nodes.pop(index)
       node.parent = None
       return node
@@ -171,7 +171,19 @@ class Node(ABC):
           self.insert(node)
 
   def __iter__(self):
-    return iter(self._nodes)          
+    return iter(self._nodes)     
+
+  def __rshift__(self, parent: "Node") -> "Node":
+    parent.insert(self)
+    return parent
+
+  def __rrshift__(self, text: str | int | float | None) -> "Node":
+    self.insert(text)
+    return self  
+
+  def __lshift__(self, child: "str | int | float | Node | None") -> "Node":
+    child_ = self.insert(child)
+    return self if type(child) == Root else child_ 
 
 class Text(Node):
   def __init__(self, text: str = "", escape=True) -> None:
@@ -195,6 +207,30 @@ class Text(Node):
   
   def insert(self, child: "str | int | float | Node", index: int | None = None) -> "Node": 
     raise TypeError(f"Node insertion not allowed in a Text node.") 
+
+  def __rshift__(self, parent: "Node") -> "Node":
+    if type(parent) == Text:
+      parent.text += self.text
+      self.text = ""
+    else:  
+      parent.insert(self)
+
+    return parent
+  
+  def __rrshift__(self, text: str | int | float) -> "Text":
+    self.text += str(text)
+    return self  
+  
+  def __lshift__(self, child: str | int | float | Node) -> "Node":
+    if type(child) == Text: 
+      self.text += child.text
+      child.text = ""
+    elif type(child) in (str, int, float, bool):
+      self.text += str(child)
+    else:  
+      self.insert(child)
+
+    return self
   
 class Element(Node): 
   tag_name: str = "element"
