@@ -184,6 +184,19 @@ class Node(ABC):
   def __lshift__(self, child: "str | int | float | Node | None") -> "Node":
     child_ = self.insert(child)
     return self if type(child) == Root else child_ 
+  
+  def __radd__(self, text: str | int | float) -> "Root":
+    root = Root()
+    root.insert(text)
+    root.insert(self)
+    return root
+
+  def __add__(self, node: "Node | str | int | float") -> "Root":
+    root = Root()
+    root.insert(self)
+    root.insert(node)
+
+    return root   
 
 class Text(Node):
   def __init__(self, text: str = "", escape=True) -> None:
