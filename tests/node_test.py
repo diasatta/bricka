@@ -1,5 +1,5 @@
 from bricka.node import Text, Root
-from foo_elements import Foo, Bar, Baz, Quux
+from foo_elements import Foo, Bar, Baz, Quux, Fred
 import pytest
 
 class TestNodeInsertInParent():
@@ -170,6 +170,13 @@ class TestNodeInsertAChild():
     node.insert(Baz())
     node.insert(Quux(), 1)
     assert node.render_inline() == "<foo><bar></bar><quux><baz></baz></foo>"
+  
+  def test_inserting_a_root_with_index(self):
+    # Inserts the root's children at the given index
+    root = Root(Quux(), Fred())
+    node = Foo(Bar(), Baz())
+    node.insert(root, 1)
+    assert node.render_inline() == "<foo><bar></bar><quux><fred><baz></baz></foo>"
 
 class TestNodePrependToParent():
   def test_prepend_to_return_value(self):
@@ -348,6 +355,21 @@ class TestNodeWithContext():
     assert bar.render_inline() == "<bar></bar>"    
     assert node.render_inline() == "<foo><baz></baz></foo>"    
 
+  def test_appending_a_node_again_without_freeing_it(self):
+    # Raises an exception
+    with Bar() as bar:
+      baz = Baz()
+
+    assert bar.render_inline() == "<bar><baz></baz></bar>"   
+
+    with Foo() as node:
+      # baz.free()
+      with pytest.raises(Exception):
+        baz.collect()
+
+    # assert bar.render_inline() == "<bar></bar>"    
+    # assert node.render_inline() == "<foo><baz></baz></foo>"    
+
   # def test_appending_nodes_in_concurrent_threads(self):
   # # TODO
   #   pass
@@ -360,4 +382,200 @@ class TestNodeIterator():
     for n in node:
       assert n == node._nodes[i]
       i += 1 
+
+class TestNodeRightShifting():
+  def test_right_shifting_return_value(self):
+    # Is always the rightmost term
+    node = Foo()
+    assert node == Bar() >> node
+
+  def test_right_shifting_an_element_to_a_text(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Foo() >> Text("") # type: ignore    
+
+  def test_right_shifting_an_element_to_a_void(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Foo() >> Quux() # type: ignore
+
+  def test_right_shifting_an_element_to_a_container(self):
+    # Appends the left element to the container
+    node = Bar() >> Foo()   
+    assert node.render_inline() == "<foo><bar></bar></foo>"
+
+  def test_right_shifting_an_element_to_a_root(self):
+    # Appends the left element to the root
+    node = Root(Foo())
+    Bar() >> node # type: ignore
+    assert node.render_inline() == "<foo></foo><bar></bar>"
+
+  def test_right_shifting_a_string_to_a_container(self):
+    # Converts the string to Text and appends it
+    node = "Bar" >> Foo()   
+    assert node.render_inline() == "<foo>Bar</foo>"
+
+  def test_right_shifting_a_number_to_a_container(self):
+    # Converts the number to Text and appends it
+    node = 1 >> Foo()   
+    assert node.render_inline() == "<foo>1</foo>"
+
+  def test_right_shifting_a_float_to_a_container(self):
+    # Converts the float to Text and appends it
+    node = 1.23 >> Foo()   
+    assert node.render_inline() == "<foo>1.23</foo>"
+
+  def test_right_shifting_a_boolean_to_a_container(self):
+    # Converts the boolean to Text and appends it
+    node = True >> Foo()         
+    assert node.render_inline() == "<foo>True</foo>"
+
+  def test_right_shifting_a_none_to_a_container(self):
+    # Converts the None to empty Text and appends it
+    node = None >> Foo()   
+    assert node.render_inline() == "<foo></foo>"
+  
+  def test_chained_right_shifting_with_containers(self):
+    # Creates a hierarchy of nodes
+    node = Baz() >> Bar() >> Foo()
+    assert node.render_inline() == "<foo><bar><baz></baz></bar></foo>"   
+
+  def test_chained_right_shifting_with_text(self):
+    # Creates a hierarchy of nodes
+    node = "Baz" >> Bar() >> Foo()
+    assert node.render_inline() == "<foo><bar>Baz</bar></foo>"  
+
+  def test_chained_right_shifting_with_void(self):
+    # Creates a hierarchy of nodes
+    node = Quux() >> Bar() >> Foo()
+    assert node.render_inline() == "<foo><bar><quux></bar></foo>"    
+
+  def test_right_shifting_using_parenthesis(self):
+    # Is not associative
+    node = (Quux() >> Bar()) >> Foo()
+    assert node.render_inline() == "<foo><bar><quux></bar></foo>" 
+
+    node = Quux() >> (Bar() >> Foo())
+    assert node.render_inline() == "<foo><bar></bar><quux></foo>"    
+
+class TestNodeLeftShifting():
+  def test_left_shifting_return_value(self):
+    # Is always the rightmost term
+    node = Foo()
+    assert node == Bar() << node
+
+  def test_left_shifting_an_element_to_a_text(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Text("") << Foo() # type: ignore    
+
+  def test_left_shifting_an_element_to_a_void(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Quux() << Foo() # type: ignore
+
+  def test_left_shifting_an_element_to_a_container(self):
+    # Appends the left element to the container
+    node = Foo()
+    node << Bar() # type: ignore
+    assert node.render_inline() == "<foo><bar></bar></foo>"
+
+  def test_left_shifting_an_element_to_a_root(self):
+    # Appends the left element to the root
+    node = Root(Foo())
+    node << Bar() # type: ignore
+    assert node.render_inline() == "<foo></foo><bar></bar>"
+
+  def test_left_shifting_a_string_to_a_container(self):
+    # Converts the string to Text and appends it
+    node = Foo()
+    node << "Bar" # type: ignore
+    assert node.render_inline() == "<foo>Bar</foo>"
+
+  def test_left_shifting_a_number_to_a_container(self):
+    # Converts the number to Text and appends it
+    node = Foo()   
+    node << 1 # type: ignore
+    assert node.render_inline() == "<foo>1</foo>"
+
+  def test_left_shifting_a_float_to_a_container(self):
+    # Converts the float to Text and appends it
+    node = Foo()   
+    node << 1.23 # type: ignore
+    assert node.render_inline() == "<foo>1.23</foo>"
+
+  def test_left_shifting_a_boolean_to_a_container(self):
+    # Converts the boolean to Text and appends it
+    node = Foo()         
+    node << True # type: ignore
+    assert node.render_inline() == "<foo>True</foo>"
+
+  def test_left_shifting_a_none_to_a_container(self):
+    # Converts the None to empty Text and appends it
+    node = Foo()   
+    node << None # type: ignore
+    assert node.render_inline() == "<foo></foo>"
+  
+  def test_chained_left_shifting_with_containers(self):
+    # Creates a hierarchy of nodes
+    node = Foo()
+    node << Bar() << Baz() # type: ignore
+    assert node.render_inline() == "<foo><bar><baz></baz></bar></foo>"   
+
+  def test_chained_left_shifting_with_text(self):
+    # Creates a hierarchy of nodes
+    node = Foo()
+    node << Bar() << "Baz"
+    assert node.render_inline() == "<foo><bar>Baz</bar></foo>"  
+
+  def test_chained_left_shifting_with_void(self):
+    # Creates a hierarchy of nodes
+    node = Foo()
+    node << Bar() << Quux()
+    assert node.render_inline() == "<foo><bar><quux></bar></foo>"    
+
+  # def test_left_shifting_using_parenthesis(self):
+  #   # Is not associative
+  #   node = (Quux() << Bar()) << Foo()
+  #   assert node.render_inline() == "<foo><bar><quux></bar></foo>" 
+
+  #   node = Quux() << (Bar() << Foo())
+  #   assert node.render_inline() == "<foo><bar></bar><quux></foo>"    
+
+class TestNodeChildrenGetting():
+  def test_getting_child_at_index(self):
+    # Returns the child at the given index, otherwise None
+    node = Foo(Bar(), Baz(), Quux())
+    assert node.at(1).render_inline() == "<baz></baz>" # type: ignore
+    assert node.at(3) == None # type: ignore
+
+  def test_getting_first_child(self):
+    # Returns the first child
+    node = Foo(Bar(), Baz(), Quux())
+    assert node.first().render_inline() == "<bar></bar>" # type: ignore
+
+  def test_getting_last_child(self):
+    # Returns the last child
+    node = Foo(Bar(), Baz(), Quux())
+    assert node.last().render_inline() == "<quux>" # type: ignore
+
+class TestNodeChildrenTaking():
+  def test_taking_child_at_index(self):
+    # Returns the child at the given index and removes it from the parent node's children
+    node = Foo(Bar(), Baz(), Quux())
+    assert node.take_at(1).render_inline() == "<baz></baz>" # type: ignore
+    assert node.render_inline() == "<foo><bar></bar><quux></foo>"
+    assert node.take_at(3) == None
+
+  def test_taking_first_child(self):
+    # Returns the first child and removes it from the parent node's children
+    node = Foo(Bar(), Baz(), Quux())
+    assert node.take_first().render_inline() == "<bar></bar>" # type: ignore
+    assert node.render_inline() == "<foo><baz></baz><quux></foo>"
+
+  def test_taking_last_child(self):
+    # Returns the last child and removes it from the parent node's children
+    node = Foo(Bar(), Baz(), Quux())
+    assert node.take_last().render_inline() == "<quux>" # type: ignore
+    assert node.render_inline() == "<foo><bar></bar><baz></baz></foo>"
 

@@ -1,4 +1,6 @@
-from foo_elements import Quux
+from bricka.node import Root, Text, Void
+from foo_elements import Foo, Quux
+import pytest
 
 class TestVoidElementRendering():
   def test_rendering_a_void_element_using_render(self):
@@ -22,3 +24,60 @@ class TestVoidElementRendering():
 
     level = 2
     assert node.render(level=level, spaces=2) == level * 2 * " " + "<quux>"
+
+class TestVoidRightShifting():
+  def test_right_shifting_return_value(self):
+    # Is always the rightmost term
+    node = Foo()
+    assert node == Quux() >> node
+
+  def test_right_shifting_a_void_to_a_text(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Quux() >> Text() # type: ignore
+
+  def test_right_shifting_a_void_to_another_void(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Quux() >> Quux() # type: ignore
+
+  def test_right_shifting_a_void_to_a_container(self):
+    # Appends the void to the container
+    node = Quux() >> Foo()   
+    assert node.render_inline() == "<foo><quux></foo>"
+
+  def test_right_shifting_a_void_to_a_root(self):
+    # Appends the void to the container
+    node = Quux() >> Root()   
+    assert node.render_inline() == "<quux>"
+
+class TestVoidLeftShifting():
+  def test_left_shifting_a_string_to_a_void(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Quux() << "Foo" # type: ignore
+
+  def test_left_shifting_a_number_to_a_void(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Quux() << 1 # type: ignore    
+
+  def test_left_shifting_a_text_to_a_void(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Quux() << Text() # type: ignore  
+
+  def test_left_shifting_a_void_to_another_void(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Quux() << Quux() # type: ignore   
+       
+  def test_left_shifting_an_container_to_a_void(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Quux() << Foo() # type: ignore   
+       
+  def test_left_shifting_a_root_to_a_void(self):
+    # Raises a TypeError
+    with pytest.raises(TypeError):
+      Quux() << Root() # type: ignore   
