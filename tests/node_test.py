@@ -351,3 +351,13 @@ class TestNodeWithContext():
   # def test_appending_nodes_in_concurrent_threads(self):
   # # TODO
   #   pass
+
+class TestNodeIterator():
+  def test_interating_an_element_with_for(self):
+    # Iterates on the element's children
+    node = Foo(Bar(), Baz())
+    i = 0
+    for n in node:
+      assert n == node._nodes[i]
+      i += 1 
+
