@@ -290,3 +290,64 @@ class TestNodeAppendAChild():
     text = node.append("Bar")
     assert type(text) == Text
     assert node.render_inline() == "<foo>Bar</foo>"
+
+class TestNodeWithContext():
+  # def test_creating_a_node_outside_of_with_context(self):
+  #   # Does not append to the stack
+  #   node = Foo()
+  #   assert node._with_stack == []
+
+  def test_appending_nodes_using_a_one_level_with_context(self):
+    # Appends all the nodes created within the context
+    node = Foo()
+    with node:
+      bar = Bar()
+      quux = Quux()
+      assert list(node._with_stack.values())[0] == [[bar, quux]]
+
+    assert list(node._with_stack.values())[0] == []
+    assert node.render_inline() == "<foo><bar></bar><quux></foo>"
+ 
+  def test_appending_nodes_using_a_two_level_with_context(self):
+    # Recursively appends all the nodes created within the context
+    with Foo() as node:
+      with Bar() as bar:
+        baz = Baz()
+        quux = Quux()
+      
+        assert list(node._with_stack.values())[0] == [[bar], [baz, quux]]
+    
+    assert node.render_inline() == "<foo><bar><baz></baz><quux></bar></foo>"
+
+  def test_appending_using_with_context_and_manual_appending(self):
+    # Appends only the nodes that don't have a parent
+    with Foo() as node:
+      Bar().append(Quux())
+
+    assert node.render_inline() == "<foo><bar><quux></bar></foo>"
+
+  def test_appending_a_node_created_outside_of_with_context(self):
+    # Is possible using collect() method
+    bar = Bar()
+    with Foo() as node:
+      bar.collect()
+
+    assert node.render_inline() == "<foo><bar></bar></foo>"  
+
+  def test_appending_a_node_already_inserted_in_another_element(self):
+    # Is possible using collect() after detaching it from its parent
+    with Bar() as bar:
+      baz = Baz()
+
+    assert bar.render_inline() == "<bar><baz></baz></bar>"   
+
+    with Foo() as node:
+      baz.free()
+      baz.collect()
+
+    assert bar.render_inline() == "<bar></bar>"    
+    assert node.render_inline() == "<foo><baz></baz></foo>"    
+
+  # def test_appending_nodes_in_concurrent_threads(self):
+  # # TODO
+  #   pass
