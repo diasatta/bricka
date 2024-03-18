@@ -170,6 +170,9 @@ class Node(ABC):
         if node.parent is None:
           self.insert(node)
 
+  def __iter__(self):
+    return iter(self._nodes)          
+
 class Text(Node):
   def __init__(self, text: str = "", escape=True) -> None:
     super().__init__()
