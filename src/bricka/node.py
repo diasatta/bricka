@@ -9,6 +9,9 @@ class Node(ABC):
     self.parent: "Node | None" = None
     self._nodes: list[Node] = []
 
+    for node in nodes:
+      self.insert(node)
+
   def __str__(self) -> str:
     return self.render()
   
@@ -53,6 +56,80 @@ class Node(ABC):
 
     return html.escape(markup) if escape else markup
   
+  def insert(self, child: "str | int | float | Node | None", index: int | None = None) -> "Node": 
+    if type(child) == Root:
+      i = -1
+      while child._nodes:
+        node: Node | None = child.take_first()
+        i += 1  
+        if index is None:
+          self.insert(node)
+        else:  
+          self.insert(node, index+i)
+
+      return child  
+    
+    if child is None:
+      child_ = Text("") 
+    elif type(child) in (str, int, float, bool):
+      child_ = Text(str(child)) 
+    else:
+      child_: Node = child # type: ignore
+
+    if child_.parent is not None:
+      raise Exception(f"Node {type(self)} already having a parent. Free the node before inserting it again.")  
+
+    child_.parent = self 
+    if index is None:
+      self._nodes.append(child_)
+    else:  
+      self._nodes.insert(index, child_)
+    return child_  
+  
+  def insert_in(self, parent: "Node", index: int | None = None) -> "Node":
+    parent.insert(self, index)
+
+    return parent
+  
+  def prepend_to(self, container: "Node") -> "Node":
+    return self.insert_in(container, 0)  
+  
+  def prepend(self, node: "Node | str | int | float") -> "Node":
+    return self.insert(node, 0)   
+
+  def append_to(self, container: "Node") -> "Node":
+    self.insert_in(container)
+    return container 
+  
+  def append(self, node: "Node | str | int | float") -> "Node":
+    return self.insert(node)
+  
+  def at(self, index: int) -> "Node | None":
+    if self._nodes:
+      return self._nodes[index]
+    
+    return None
+  
+  def first(self) -> "Node | None":
+    return self.at(0) 
+  
+  def last(self) -> "Node | None":
+    return self.at(-1) 
+  
+  def take_at(self, index: int) -> "Node | None":
+    if self._nodes:
+      node = self._nodes.pop(index)
+      node.parent = None
+      return node
+    
+    return None
+  
+  def take_first(self) -> "Node | None":
+    return self.take_at(0)
+  
+  def take_last(self) -> "Node | None":
+    return self.take_at(-1)
+
 class Text(Node):
   def __init__(self, text: str = "", escape=True) -> None:
     super().__init__()
@@ -73,6 +150,9 @@ class Text(Node):
 
     return text  
   
+  def insert(self, child: "str | int | float | Node", index: int | None = None) -> "Node": 
+    raise TypeError(f"Node insertion not allowed in a Text node.") 
+  
 class Element(Node): 
   tag_name: str = "element"
 
@@ -84,6 +164,9 @@ class Void(Element):
 
   def end_tag(self, level: int = 0, spaces: int | None = 2) -> str:
     return ""  
+  
+  def insert(self, child: "Node", index: int | None = None) -> "Node": 
+    raise TypeError(f"Node insertion not allowed in a void element.") 
   
 class Container(Element):
   tag_name: str = "container"
