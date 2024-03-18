@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Testing",
+      "command": ".venv/bin/pytest",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "args": [
+        "tests",
+        "-vv"
+      ],
+      "presentation": {
+        "echo": true,
+        "panel": "shared",
+        "clear": true,
+        "focus": false,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+  ]
+}
