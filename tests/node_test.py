@@ -579,3 +579,16 @@ class TestNodeChildrenTaking():
     assert node.take_last().render_inline() == "<quux>" # type: ignore
     assert node.render_inline() == "<foo><bar></bar><baz></baz></foo>"
 
+class TestNodeAdding():
+  def test_adding_return_value(self):
+    # Is always a root
+    left, right = "Foo", Text("Bar")
+    node = left + right
+    assert type(node) == Root
+
+class TestNodeChainedAdding():
+  def test_adding_multiple_nodes(self):
+    # Creates siblings
+    node = Foo() + Text("Bar") + Quux() + "Baz"
+    assert node.render_inline() == "<foo></foo>Bar<quux>Baz"     
+

@@ -1,5 +1,5 @@
-from bricka.node import Root, Text, Void
-from foo_elements import Foo, Quux
+from bricka.node import Root, Text
+from foo_elements import Foo, Bar, Quux, Fred
 import pytest
 
 class TestVoidElementRendering():
@@ -81,3 +81,53 @@ class TestVoidLeftShifting():
     # Raises a TypeError
     with pytest.raises(TypeError):
       Quux() << Root() # type: ignore   
+
+class TestNodeAdding():
+  def test_adding_a_void_and_a_string(self):
+    # Creates siblings
+    left, right = Quux(), "Bar"
+    node = left + right
+    assert node.render_inline() == "<quux>Bar"
+
+  def test_adding_a_void_and_an_integer(self):
+    # Creates siblings
+    left, right = Quux(), 1
+    node = left + right
+    assert node.render_inline() == "<quux>1"
+
+  def test_adding_a_void_and_a_float(self):
+    # Creates siblings
+    left, right = Quux(), 1.23
+    node = left + right
+    assert node.render_inline() == "<quux>1.23"
+
+  def test_adding_a_void_and_a_text(self):
+    # Creates siblings
+    left, right = Quux(), Text("Bar")
+    node = left + right
+    assert node.render_inline() == "<quux>Bar"
+
+  def test_adding_a_void_and_a_void(self):
+    # Creates siblings
+    left, right = Quux(), Fred()
+    node = left + right
+    assert node.render_inline() == "<quux><fred>"
+
+  def test_adding_a_void_and_a_container(self):
+    # Creates siblings
+    left, right = Quux(), Bar()
+    node = left + right
+    assert node.render_inline() == "<quux><bar></bar>"
+
+  def test_adding_a_void_and_a_root(self):
+    # Prepends the void to the root
+    left, right = Quux(), Root(Bar())
+    node = left + right
+    assert node.render_inline() == "<quux><bar></bar>"
+
+class TestNodeChainedAdding():
+  def test_adding_multiple_tags(self):
+    # Creates siblings
+    node = Quux() + Fred() + Quux()
+    assert node.render_inline() == "<quux><fred><quux>" 
+

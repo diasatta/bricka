@@ -1,5 +1,5 @@
 from bricka.node import Text, Root
-from foo_elements import Foo, Quux
+from foo_elements import Foo, Bar, Quux
 import pytest
 
 class TestTextRendering():
@@ -152,3 +152,72 @@ class TestTextLeftShifting():
     # Raises a TypeError
     with pytest.raises(TypeError):
       Text("Foo") << Root() # type: ignore
+
+class TestTextAdding():
+  def test_adding_a_text_and_a_string(self):
+    # Creates text siblings
+    left, right = Text("Foo"), "Bar"
+    node = left + right
+    assert node.render_inline() == "FooBar"
+
+  def test_adding_a_text_and_an_integer(self):
+    # Creates text siblings
+    left, right = Text("Foo"), 1
+    node = left + right
+    assert node.render_inline() == "Foo1"
+
+  def test_adding_a_text_and_a_float(self):
+    # Creates text siblings
+    left, right = Text("Foo"), 1.23
+    node = left + right
+    assert node.render_inline() == "Foo1.23"
+
+  def test_adding_a_text_and_a_text(self):
+    # Creates text siblings
+    left, right = Text("Foo"), Text("Bar")
+    node = left + right
+    assert node.render_inline() == "FooBar"
+
+  def test_adding_a_text_and_a_tag(self):
+    # Creates siblings
+    left, right = Text("Foo"), Quux()
+    node = left + right
+    assert node.render_inline() == "Foo<quux>"
+
+  def test_adding_a_text_and_an_element(self):
+    # Creates siblings
+    left, right = Text("Foo"), Bar()
+    node = left + right
+    assert node.render_inline() == "Foo<bar></bar>"
+
+  def test_adding_a_text_and_a_root(self):
+    # Prepends the text to the root
+    left, right = Text("Foo"), Root(Bar())
+    node = left + right
+    assert node.render_inline() == "Foo<bar></bar>"
+
+class TestTextChainedAdding():
+  def test_adding_text_and_multiple_strings(self):
+    # Creates a text for each string 
+    node = Text("Foo") + "Bar" + "Baz"
+    assert len(node._nodes) == 3
+    assert node.render_inline() == "FooBarBaz" 
+
+  def test_adding_multiple_strings_and_text(self):
+    # Groups the strings to a single text
+    node = "Foo" + "Bar" + Text("Baz")
+    assert len(node._nodes) == 2
+    assert node.render_inline() == "FooBarBaz" 
+
+  def test_adding_text_and_multiple_numbers(self):
+    # Creates a text for each number
+    node = Text("Foo") + 1 + 2
+    assert len(node._nodes) == 3
+    assert node.render_inline() == "Foo12" 
+
+  def test_adding_multiple_numbers_and_text(self):
+    # Adds the numbers then creates a text
+    node = 1 + 2 + Text("Foo")
+    assert len(node._nodes) == 2
+    assert node.render_inline() == "3Foo" 
+    

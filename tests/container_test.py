@@ -219,3 +219,53 @@ class TestContainerLeftShifting():
     node = Foo()
     with pytest.raises(Exception):
       node << (Bar() << Quux()) # type: ignore
+
+class TestContainerAdding():
+  def test_adding_a_container_and_a_string(self):
+    # Creates siblings
+    left, right = Foo(), "Bar"
+    node = left + right
+    assert node.render_inline() == "<foo></foo>Bar"
+
+  def test_adding_a_container_and_an_integer(self):
+    # Creates siblings
+    left, right = Foo(), 1
+    node = left + right
+    assert node.render_inline() == "<foo></foo>1"
+
+  def test_adding_a_container_and_a_float(self):
+    # Creates siblings
+    left, right = Foo(), 1.23
+    node = left + right
+    assert node.render_inline() == "<foo></foo>1.23"
+
+  def test_adding_a_container_and_a_text(self):
+    # Creates siblings
+    left, right = Foo(), Text("Bar")
+    node = left + right
+    assert node.render_inline() == "<foo></foo>Bar"
+
+  def test_adding_a_container_and_a_void(self):
+    # Creates siblings
+    left, right = Foo(), Quux()
+    node = left + right
+    assert node.render_inline() == "<foo></foo><quux>"
+
+  def test_adding_a_container_and_a_container(self):
+    # Creates siblings
+    left, right = Foo(), Bar()
+    node = left + right
+    assert node.render_inline() == "<foo></foo><bar></bar>"
+
+  def test_adding_a_container_and_a_root(self):
+    # Prepends the container to the root
+    left, right = Foo(), Root(Bar())
+    node = left + right
+    assert node.render_inline() == "<foo></foo><bar></bar>"
+
+class TestContainerChainedAdding():
+  def test_adding_multiple_container(self):
+    # Creates siblings
+    node = Foo() + Bar() + Baz()
+    assert node.render_inline() == "<foo></foo><bar></bar><baz></baz>"   
+

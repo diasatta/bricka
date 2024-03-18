@@ -161,3 +161,52 @@ class TestRootLeftShifting():
     assert bar in node._nodes
     assert right._nodes == []
     assert node.render_inline() == "<bar></bar>"
+
+class TestRootAdding():
+  def test_adding_a_root_and_a_string(self):
+    # Appends the string
+    left, right = Root(Foo()), "Bar"
+    node = left + right
+    assert node.render_inline() == "<foo></foo>Bar"
+
+  def test_adding_a_root_and_an_integer(self):
+    # Appends the integer
+    left, right = Root(Foo()), 1
+    node = left + right
+    assert node.render_inline() == "<foo></foo>1"
+
+  def test_adding_a_root_and_a_float(self):
+    # Appends the float
+    left, right = Root(Foo()), 1.23
+    node = left + right
+    assert node.render_inline() == "<foo></foo>1.23"
+
+  def test_adding_a_root_and_a_text(self):
+    # Appends the text
+    left, right = Root(Foo()), Text("Bar")
+    node = left + right
+    assert node.render_inline() == "<foo></foo>Bar"
+
+  def test_adding_a_root_and_a_void(self):
+    # Appends the void
+    left, right = Root(Foo()), Quux()
+    node = left + right
+    assert node.render_inline() == "<foo></foo><quux>"
+
+  def test_adding_a_root_and_a_container(self):
+    # Appends the container
+    left, right = Root(Foo()), Bar()
+    node = left + right
+    assert node.render_inline() == "<foo></foo><bar></bar>"
+
+  def test_adding_a_root_and_a_root(self):
+    # Merges the two roots, preserving order
+    left, right = Root(Foo()), Root(Bar())
+    node = left + right
+    assert node.render_inline() == "<foo></foo><bar></bar>"
+
+class TestRootChainedAdding():
+  def test_adding_multiple_containers(self):
+    # Merges the containers
+    node = Root(Foo()) + Root(Bar()) + Root(Baz())
+    assert node.render_inline() == "<foo></foo><bar></bar><baz></baz>"   
