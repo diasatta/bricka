@@ -1,9 +1,15 @@
 from abc import ABC
 import html
+from contextvars import ContextVar
+from uuid import uuid4
+
+_with_stack_var: ContextVar[str | None] = ContextVar('_with_stack', default=None)
 
 class Node(ABC):
   tag_name: str = "node"
   inline: bool = False
+
+  _with_stack: dict[str | None, list[list["Node"]]] = {}
 
   def __init__(self, *nodes, **attrs) -> None:
     self.parent: "Node | None" = None
@@ -11,6 +17,13 @@ class Node(ABC):
 
     for node in nodes:
       self.insert(node)
+
+    if _with_stack_var.get() is None:
+      _with_stack_var.set(uuid4().hex)  
+      self._with_stack[_with_stack_var.get()] = []
+
+    if Node._with_stack.get(_with_stack_var.get(), None):
+      self.collect()    
 
   def __str__(self) -> str:
     return self.render()
@@ -129,6 +142,33 @@ class Node(ABC):
   
   def take_last(self) -> "Node | None":
     return self.take_at(-1)
+  
+  def collect(self) -> "Node":
+    if self.parent is not None:
+      raise Exception(f"Node already having a parent. Detach the node before collecting it.")
+
+    Node._with_stack[_with_stack_var.get()][-1].append(self)
+    return self
+  
+  def free(self) -> "Node | None":
+    old_parent = self.parent
+    if self.parent is not None:
+      self.parent._nodes.remove(self)
+      self.parent = None  
+
+    return old_parent 
+   
+  def __enter__(self) -> "Node":   
+    Node._with_stack[_with_stack_var.get()].append([])
+    return self
+
+  def __exit__(self, type_, value, traceback):
+    if type_:
+      self._with_stack[_with_stack_var.get()].pop()
+    else:  
+      for node in self._with_stack[_with_stack_var.get()].pop():
+        if node.parent is None:
+          self.insert(node)
 
 class Text(Node):
   def __init__(self, text: str = "", escape=True) -> None:
