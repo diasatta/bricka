@@ -590,5 +590,55 @@ class TestNodeChainedAdding():
   def test_adding_multiple_nodes(self):
     # Creates siblings
     node = Foo() + Text("Bar") + Quux() + "Baz"
-    assert node.render_inline() == "<foo></foo>Bar<quux>Baz"     
+    assert node.render_inline() == "<foo></foo>Bar<quux>Baz"   
 
+class TestNodeMultiplication():
+  def test_multiplying_return_value(self):
+    # Is always a container
+    node = 3 * Foo()    
+    assert type(node) == Root
+
+  def test_multiplying_an_integer_and_a_text(self):
+    # Creates multiple copies of the text
+    node = 3 * Text("Bar")
+    assert node.render_inline() == "BarBarBar"  
+
+  def test_multiplying_a_text_and_an_integer(self):
+    # Creates multiple copies of the text
+    node = Text("Bar") * 3
+    assert node.render_inline() == "BarBarBar"  
+
+  def test_multiplying_an_integer_and_a_void(self):
+    # Creates multiple copies of the void
+    node = 3 * Quux()
+    assert node.render_inline() == "<quux><quux><quux>"   
+
+  def test_multiplying_a_void_and_an_integer(self):
+    # Creates multiple copies of the void
+    node = Quux() * 3
+    assert node.render_inline() == "<quux><quux><quux>" 
+
+  def test_multiplying_an_integer_and_a_container(self):
+    # Creates multiple copies of the container
+    node = 3 * Foo()
+    assert node.render_inline() == "<foo></foo><foo></foo><foo></foo>"   
+
+  def test_multiplying_a_container_and_an_integer(self):
+    # Creates multiple copies of the container
+    node = Foo() * 3
+    assert node.render_inline() == "<foo></foo><foo></foo><foo></foo>"
+
+  def test_multiplying_a_root_and_an_integer(self):
+    # Creates multiple copies of the root's children
+    node = Root(Foo(), Quux()) * 2
+    assert node.render_inline() == "<foo></foo><quux><foo></foo><quux>" 
+
+  def test_multiplying_an_integer_and_a_root(self):
+    # Creates multiple copies of the root's children
+    node = 2 * Root(Foo(), Quux())
+    assert node.render_inline() == "<foo></foo><quux><foo></foo><quux>" 
+
+  def test_multiplying_an_integer_and_a_deep_element(self):
+    # Creates multiple deep copies of the element
+    node = 2 * Foo(Bar(), Quux())
+    assert node.render_inline() == "<foo><bar></bar><quux></foo><foo><bar></bar><quux></foo>"    
