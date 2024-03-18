@@ -2,6 +2,7 @@ from abc import ABC
 import html
 from contextvars import ContextVar
 from uuid import uuid4
+from copy import deepcopy
 
 _with_stack_var: ContextVar[str | None] = ContextVar('_with_stack', default=None)
 
@@ -197,6 +198,16 @@ class Node(ABC):
     root.insert(node)
 
     return root   
+
+  def __mul__(self, count: int) -> "Root":
+    root = Root()
+    for _ in range(count):
+      root.insert(deepcopy(self))
+
+    return root
+  
+  def __rmul__(self, count: int) -> "Container":    
+    return self.__mul__(count) 
 
 class Text(Node):
   def __init__(self, text: str = "", escape=True) -> None:
