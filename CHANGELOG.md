@@ -2,6 +2,63 @@
 
 
 
+## v0.2.0 (2024-03-19)
+
+### Build
+
+* build: add settings to type checker ([`ee2cac5`](https://github.com/diasatta/bricka/commit/ee2cac53e3ee5d8e5d79ef19ab65d72c71c00293))
+
+* build: add a vscode task for testing ([`313625c`](https://github.com/diasatta/bricka/commit/313625c36a840272ec742b3e7f03c640e288aab3))
+
+### Documentation
+
+* docs: update README.md ([`8466103`](https://github.com/diasatta/bricka/commit/846610359b7edc5b71adc1e9c6ac91136acfa2e1))
+
+### Feature
+
+* feat: add all standard html elements and attributes
+
+Standard HTML elements as well as standard attributes are supported. Deprecated elements and attributes are not supported. Experimental elements and attributes should be added progressively.
+
+HTML elements include a MDN description as docstring, allowing to get a quick overview of the element on hover when using a proper IDE like VSCODE.
+
+HTML attributes support autocompletion for attributes names as well as attribute values.
+
+Attribute values are automatically escaped and URL attributes are URL-encoded. ([`4a0c734`](https://github.com/diasatta/bricka/commit/4a0c73496b36dbae264de655bd371dda512b7efb))
+
+* feat: add support for multiply operator to clone nodes ([`700b728`](https://github.com/diasatta/bricka/commit/700b728cbe3618e8f833c14d7742ab904dc1173e))
+
+* feat: add support for plus operator to create siblings ([`42f556a`](https://github.com/diasatta/bricka/commit/42f556a0c51ed0dc919211b199a821874519fb83))
+
+* feat: add support for right and left shift operators ([`bd19c23`](https://github.com/diasatta/bricka/commit/bd19c233c47a1369a1d68899c408b26c3376f82d))
+
+* feat: add support for node iterators ([`c6fde4a`](https://github.com/diasatta/bricka/commit/c6fde4ae7e8bd334b309c462617e49fb91296a08))
+
+* feat: add support for node insertion by context managers ([`7a386a0`](https://github.com/diasatta/bricka/commit/7a386a0908e3c6b7e4ef0482f0c1a9fa291dd7df))
+
+* feat: add node insertion methods ([`cafeb2e`](https://github.com/diasatta/bricka/commit/cafeb2ecbbb4630f44b3d99572dbe68f1e298991))
+
+* feat: add core node classes ([`595ac18`](https://github.com/diasatta/bricka/commit/595ac1828826ddead85939fb037a3b9c2252617a))
+
+### Test
+
+* test: add tests for html elements and attributes ([`7e0f078`](https://github.com/diasatta/bricka/commit/7e0f07802b0f5a43ee439f5863d7322c571d1d7c))
+
+* test: add tests for multiply operator ([`e2e37a5`](https://github.com/diasatta/bricka/commit/e2e37a5b361f3fd4560314a57fbe7d376313385f))
+
+* test: add tests for plus operator ([`55029d4`](https://github.com/diasatta/bricka/commit/55029d4c6a7a087226ecc32fa2a914ccb6791c98))
+
+* test: add tests for left and right shift operators ([`281c563`](https://github.com/diasatta/bricka/commit/281c56324d7e0a399294a90c6c99cbfc1db4d300))
+
+* test: add tests for node iterator ([`b0b5041`](https://github.com/diasatta/bricka/commit/b0b5041c8c6c3eb7a7d0b01085a70eee023af9bc))
+
+* test: add tests for context managers ([`bdcae32`](https://github.com/diasatta/bricka/commit/bdcae32b2417fe000e776582caf83db2d2e7c11b))
+
+* test: add tests for node insertion ([`d7ffded`](https://github.com/diasatta/bricka/commit/d7ffded527c19ab43645f6917be7b566d57cf603))
+
+* test: add tests for basic node rendering ([`224024e`](https://github.com/diasatta/bricka/commit/224024ee0a9e9f076bad7ffeb80c94a4068e1677))
+
+
 ## v0.1.12 (2024-03-17)
 
 ### Build
