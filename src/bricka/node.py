@@ -3,6 +3,23 @@ import html
 from contextvars import ContextVar
 from uuid import uuid4
 from copy import deepcopy
+from enum import Enum
+from typing import cast
+import urllib.parse
+
+class AttrType(Enum):
+  BOOL = 0
+  PSEUDO_BOOL = 1
+  TEXT = 2
+  HTML = 3
+  URL = 4
+  JS = 5
+  STYLE = 6
+  OTHER = 7
+
+CONFLICTING_ATTRS: tuple[str, ...] = ("as", "async", "class", "for", "is")
+
+PREFIXED_ATTRS: tuple[str, ...] = ("aria", "data", "user")
 
 _with_stack_var: ContextVar[str | None] = ContextVar('_with_stack', default=None)
 
@@ -12,9 +29,13 @@ class Node(ABC):
 
   _with_stack: dict[str | None, list[list["Node"]]] = {}
 
-  def __init__(self, *nodes, **attrs) -> None:
+  def __init__(self, *nodes: "Node", **attrs) -> None:
     self.parent: "Node | None" = None
     self._nodes: list[Node] = []
+    self._attrs: dict[str, str] = {}
+
+    for attr in attrs:
+      self._attrs[attr] = attrs[attr]
 
     for node in nodes:
       self.insert(node)
@@ -25,6 +46,10 @@ class Node(ABC):
 
     if Node._with_stack.get(_with_stack_var.get(), None):
       self.collect()    
+
+  @property
+  def attrs(self) -> dict[str, str]:
+    return self._attrs    
 
   def __str__(self) -> str:
     return self.render()
@@ -48,7 +73,8 @@ class Node(ABC):
   def start_tag(self, level: int = 0, spaces: int | None = 2) -> str:
     indent = "" if spaces is None else " " * level * spaces
     
-    html = f"{indent}<{self.tag_name}>"
+    attrs = self.render_attrs()
+    html = f"{indent}<{self.tag_name}{' ' + attrs if attrs != '' else ''}>"
 
     return html 
   
@@ -208,6 +234,55 @@ class Node(ABC):
   
   def __rmul__(self, count: int) -> "Container":    
     return self.__mul__(count) 
+  
+  @classmethod
+  def attr_html_name(cls, python_name: str) -> str:
+    return python_name.removesuffix("_").replace("_", "-")
+  
+  def attr_type(self, element_name: str, attr_name: str) -> AttrType:
+    types = ATTR_TYPES.get(element_name, None)
+    name = self.attr_html_name(attr_name)
+
+    if types is None:      
+      return ATTR_TYPES["*"].get(name, AttrType.TEXT)
+
+    return cast(AttrType, ATTR_TYPES[element_name].get(name, ATTR_TYPES["*"].get(name, AttrType.TEXT)))
+  
+  def render_attr(self, name: str, value: str | bool | None) -> str:
+    name = self.attr_html_name(name) # TODO
+
+    if type(value) == bool:
+      if value:
+        return name
+      else:
+        return ""
+
+    if value is None:
+      return ""
+
+    if self.attr_type(self.tag_name, name) == AttrType.URL:
+      return f'{name}="{urllib.parse.quote(value)}"' # type: ignore
+    else:  
+      return f'{name}="{html.escape(str(value), quote=True)}"'
+
+  def render_attrs(self) -> str:
+    attrs: list[str] = []
+    output = ""
+    for key, value in self._attrs.items():
+      if type(value) == dict:
+        if key in PREFIXED_ATTRS:
+          l = []
+          for k, v in value.items(): #type: ignore
+            l.append(self.render_attr(f'{key}-{k}', v))
+            output = " ".join(l)
+        else:
+          raise TypeError(f"Dict. values not allowed for attribute '{key}'.")
+      else:
+        output = self.render_attr(key, value)
+
+      attrs.append(output)
+
+    return " ".join(attrs).strip()
 
 class Text(Node):
   def __init__(self, text: str = "", escape=True) -> None:
@@ -286,3 +361,386 @@ class Root(Container):
   def render(self, level: int = 0, spaces: int | None = 2, escape: bool = False) -> str:
     return self.inner_html(level, spaces, escape)
   
+ATTR_TYPES = {
+  "*": {
+    "accesskey": AttrType.TEXT,
+    "autocapitalize": AttrType.TEXT,
+    "autofocus": AttrType.BOOL,
+    "class": AttrType.TEXT,
+    "contenteditable": AttrType.TEXT,
+    "dir": AttrType.TEXT,
+    "draggable": AttrType.TEXT,
+    "enterkeyhint": AttrType.TEXT,
+    "hidden": AttrType.PSEUDO_BOOL,
+    "id": AttrType.TEXT,
+    "inert": AttrType.BOOL,
+    "inputmode": AttrType.TEXT,
+    "is": AttrType.TEXT,
+    "itemid": AttrType.TEXT,
+    "itemprop": AttrType.TEXT,
+    "itemref": AttrType.TEXT,
+    "itemscope": AttrType.BOOL,
+    "itemtype": AttrType.URL,
+    "lang": AttrType.TEXT,
+    "nonce": AttrType.TEXT,
+    "part": AttrType.TEXT,
+    "popover": AttrType.TEXT,
+    "role": AttrType.TEXT,
+    "slot": AttrType.TEXT,
+    "spellcheck": AttrType.TEXT,
+    "style": AttrType.STYLE,
+    "tabindex": AttrType.TEXT,
+    "title": AttrType.TEXT,
+    "translate": AttrType.TEXT,
+    "virtualkeyboardpolicy": AttrType.TEXT,
+  },
+  "a": {
+    "download": AttrType.TEXT,
+    "href": AttrType.URL,
+    "hreflang": AttrType.TEXT,
+    "ping": AttrType.URL,
+    "referrerpolicy": AttrType.TEXT,
+    "rel": AttrType.TEXT,
+    "target": AttrType.TEXT,
+    "type": AttrType.TEXT,
+  },
+  "area": {
+    "alt": AttrType.TEXT,
+    "coords": AttrType.TEXT,
+    "download": AttrType.TEXT,
+    "href": AttrType.URL,
+    "ping": AttrType.URL,
+    "referrerpolicy": AttrType.TEXT,
+    "rel": AttrType.TEXT,
+    "shape": AttrType.TEXT,
+    "target": AttrType.TEXT,
+  },
+  "audio": {
+    "autoplay": AttrType.BOOL,
+    "controls": AttrType.BOOL,
+    "crossorigin": AttrType.TEXT,
+    "loop": AttrType.BOOL,
+    "muted": AttrType.BOOL,
+    "preload": AttrType.TEXT,
+    "src": AttrType.URL,
+  },
+  "base": {
+    "href": AttrType.URL,
+    "target": AttrType.TEXT,
+  },
+  "blockquote": {
+    "cite": AttrType.URL,
+  },
+  "body": {
+    "onafterprint": AttrType.JS,
+    "onbeforeprint": AttrType.JS,
+    "onbeforeunload": AttrType.JS,
+    "onblur": AttrType.JS,
+    "onerror": AttrType.JS,
+    "onfocus": AttrType.JS,
+    "onhashchange": AttrType.JS,
+    "onlanguagechange": AttrType.JS,
+    "onload": AttrType.JS,
+    "onmessage": AttrType.JS,
+    "onoffline": AttrType.JS,
+    "ononline": AttrType.JS,
+    "onpopstate": AttrType.JS,
+    "onredo": AttrType.JS,
+    "onresize": AttrType.JS,
+    "onstorage": AttrType.JS,
+    "onundo": AttrType.JS,
+    "onunload": AttrType.JS,
+  },
+  "button": {
+    "autofocus": AttrType.BOOL,
+    "disabled": AttrType.BOOL,
+    "form": AttrType.TEXT,
+    "formaction": AttrType.URL,
+    "formenctype": AttrType.TEXT,
+    "formmethod": AttrType.TEXT,
+    "formnovalidate": AttrType.BOOL,
+    "formtarget": AttrType.TEXT,
+    "name": AttrType.TEXT,
+    "type": AttrType.TEXT,
+    "value": AttrType.TEXT,
+  },
+  "canvas": {
+    "height": AttrType.TEXT,
+    "width": AttrType.TEXT,
+  },
+  "col": {
+    "span": AttrType.TEXT,
+  },
+  "colgroup": {
+    "span": AttrType.TEXT,
+  },
+  "data": {
+    "value": AttrType.TEXT,
+  },
+  "del": {
+    "cite": AttrType.URL,
+    "datetime": AttrType.TEXT,
+  },
+  "details": {
+    "open": AttrType.BOOL,
+  },
+  "dialog": {
+    "open": AttrType.BOOL,
+  },
+  "embed": {
+    "height": AttrType.TEXT,
+    "src": AttrType.URL,
+    "type": AttrType.TEXT,
+    "width": AttrType.TEXT,
+  },
+  "fieldset": {
+    "disabled": AttrType.BOOL,
+    "form": AttrType.TEXT,
+    "name": AttrType.TEXT,
+  },
+  "form": {
+    "accept-charset": AttrType.TEXT,
+    "action": AttrType.URL,
+    "autocomplete": AttrType.TEXT,
+    "enctype": AttrType.TEXT,
+    "method": AttrType.TEXT,
+    "name": AttrType.TEXT,
+    "novalidate": AttrType.BOOL,
+    "rel": AttrType.TEXT,
+    "target": AttrType.TEXT,
+  },
+  "html": {
+    "xmlns": AttrType.URL,
+  },
+  "iframe": {
+    "allow": AttrType.TEXT,
+    "allowfullscreen": AttrType.TEXT,
+    "height": AttrType.TEXT,
+    "loading": AttrType.TEXT,
+    "name": AttrType.TEXT,
+    "referrerpolicy": AttrType.TEXT,
+    "sandbox": AttrType.TEXT,
+    "src": AttrType.URL,
+    "srcdoc": AttrType.HTML,
+    "width": AttrType.TEXT,
+  },
+  "img": {
+    "alt": AttrType.TEXT,
+    "crossorigin": AttrType.TEXT,
+    "decoding": AttrType.TEXT,
+    "fetchpriority": AttrType.TEXT,
+    "height": AttrType.TEXT,
+    "ismap": AttrType.BOOL,
+    "loading": AttrType.TEXT,
+    "referrerpolicy": AttrType.TEXT,
+    "sizes": AttrType.TEXT,
+    "src": AttrType.URL,
+    "srcset": AttrType.URL,
+    "usemap": AttrType.URL,
+    "width": AttrType.TEXT,
+  },
+  "input": {
+    "accept": AttrType.TEXT,
+    "alt": AttrType.TEXT,
+    "autocomplete": AttrType.TEXT,
+    "autofocus": AttrType.BOOL,
+    "capture": AttrType.TEXT,
+    "checked": AttrType.BOOL,
+    "dirname": AttrType.TEXT,
+    "disabled": AttrType.BOOL,
+    "form": AttrType.TEXT,
+    "formaction": AttrType.URL,
+    "formenctype": AttrType.TEXT,
+    "formmethod": AttrType.TEXT,
+    "formnovalidate": AttrType.BOOL,
+    "formtarget": AttrType.TEXT,
+    "height": AttrType.TEXT,
+    "list": AttrType.TEXT,
+    "max": AttrType.TEXT,
+    "maxlength": AttrType.TEXT,
+    "min": AttrType.TEXT,
+    "minlength": AttrType.TEXT,
+    "multiple": AttrType.BOOL,
+    "name": AttrType.TEXT,
+    "pattern": AttrType.TEXT,
+    "placeholder": AttrType.TEXT,
+    "readonly": AttrType.BOOL,
+    "required": AttrType.BOOL,
+    "size": AttrType.TEXT,
+    "src": AttrType.URL,
+    "step": AttrType.TEXT,
+    "type": AttrType.TEXT,
+    "value": AttrType.TEXT,
+    "width": AttrType.TEXT,
+  },
+  "ins": {
+    "cite": AttrType.URL,
+    "datetime": AttrType.TEXT,
+  },
+  "label": {
+    "for": AttrType.TEXT,
+  },
+  "li": {
+    "value": AttrType.TEXT,
+  },
+  "link": {
+    "as": AttrType.TEXT,
+    "crossorigin": AttrType.TEXT,
+    "fetchpriority": AttrType.TEXT,
+    "href": AttrType.URL,
+    "hreflang": AttrType.TEXT,
+    "imagesizes": AttrType.TEXT,
+    "imagesrcset": AttrType.URL,
+    "integrity": AttrType.TEXT,
+    "media": AttrType.TEXT,
+    "referrerpolicy": AttrType.TEXT,
+    "rel": AttrType.TEXT,
+    "sizes": AttrType.TEXT,
+    "type": AttrType.TEXT,
+  },
+  "map": {
+    "name": AttrType.TEXT,
+  },
+  "meta": {
+    "charset": AttrType.TEXT,
+    "content": AttrType.TEXT,
+    "http-equiv": AttrType.TEXT,
+    "name": AttrType.TEXT,
+  },
+  "meter": {
+    "form": AttrType.TEXT,
+    "high": AttrType.TEXT,
+    "low": AttrType.TEXT,
+    "max": AttrType.TEXT,
+    "min": AttrType.TEXT,
+    "optimum": AttrType.TEXT,
+    "value": AttrType.TEXT,
+  },
+  "object": {
+    "data": AttrType.URL,
+    "form": AttrType.TEXT,
+    "height": AttrType.TEXT,
+    "name": AttrType.TEXT,
+    "type": AttrType.TEXT,
+    "width": AttrType.TEXT,
+  },
+  "ol": {
+    "reversed": AttrType.BOOL,
+    "start": AttrType.TEXT,
+    "type": AttrType.TEXT,
+  },
+  "optgroup": {
+    "disabled": AttrType.BOOL,
+    "label": AttrType.TEXT,
+  },
+  "option": {
+    "disabled": AttrType.BOOL,
+    "label": AttrType.TEXT,
+    "selected": AttrType.BOOL,
+    "value": AttrType.TEXT,
+  },
+  "output": {
+    "for": AttrType.TEXT,
+    "form": AttrType.TEXT,
+    "name": AttrType.TEXT,
+  },
+  "progress": {
+    "max": AttrType.TEXT,
+    "value": AttrType.TEXT,
+  },
+  "q": {
+    "cite": AttrType.URL,
+  },
+  "script": {
+    "async": AttrType.BOOL,
+    "crossorigin": AttrType.TEXT,
+    "defer": AttrType.BOOL,
+    "fetchpriority": AttrType.TEXT,
+    "integrity": AttrType.TEXT,
+    "nomodule": AttrType.BOOL,
+    "nonce": AttrType.TEXT,
+    "referrerpolicy": AttrType.TEXT,
+    "src": AttrType.URL,
+    "type": AttrType.TEXT,
+  },
+  "select": {
+    "autocomplete": AttrType.TEXT,
+    "autofocus": AttrType.BOOL,
+    "disabled": AttrType.BOOL,
+    "form": AttrType.TEXT,
+    "multiple": AttrType.BOOL,
+    "name": AttrType.TEXT,
+    "required": AttrType.BOOL,
+    "size": AttrType.TEXT,
+  },
+  "slot": {
+    "name": AttrType.TEXT,
+  },
+  "source": {
+    "height": AttrType.TEXT,
+    "media": AttrType.TEXT,
+    "sizes": AttrType.TEXT,
+    "src": AttrType.URL,
+    "srcset": AttrType.URL,
+    "type": AttrType.TEXT,
+    "width": AttrType.TEXT,
+  },
+  "style": {
+    "blocking": AttrType.TEXT,
+    "media": AttrType.TEXT,
+    "nonce": AttrType.TEXT,
+    "title": AttrType.TEXT,
+  },
+  "td": {
+    "colspan": AttrType.TEXT,
+    "headers": AttrType.TEXT,
+    "rowspan": AttrType.TEXT,
+  },
+  "textarea": {
+    "autocomplete": AttrType.TEXT,
+    "autofocus": AttrType.BOOL,
+    "cols": AttrType.TEXT,
+    "dirname": AttrType.TEXT,
+    "disabled": AttrType.BOOL,
+    "form": AttrType.TEXT,
+    "maxlength": AttrType.TEXT,
+    "minlength": AttrType.TEXT,
+    "name": AttrType.TEXT,
+    "placeholder": AttrType.TEXT,
+    "readonly": AttrType.BOOL,
+    "required": AttrType.BOOL,
+    "rows": AttrType.TEXT,
+    "spellcheck": AttrType.TEXT,
+    "wrap": AttrType.TEXT,
+  },
+  "th": {
+    "abbr": AttrType.TEXT,
+    "colspan": AttrType.TEXT,
+    "headers": AttrType.TEXT,
+    "rowspan": AttrType.TEXT,
+    "scope": AttrType.TEXT,
+  },
+  "time": {
+    "datetime": AttrType.TEXT,
+  },
+  "track": {
+    "default": AttrType.BOOL,
+    "kind": AttrType.TEXT,
+    "label": AttrType.TEXT,
+    "src": AttrType.URL,
+    "srclang": AttrType.TEXT,
+  },
+  "video": {
+    "autoplay": AttrType.BOOL,
+    "controls": AttrType.BOOL,
+    "crossorigin": AttrType.TEXT,
+    "disableremoteplayback": AttrType.BOOL,
+    "loop": AttrType.BOOL,
+    "muted": AttrType.BOOL,
+    "playsinline": AttrType.BOOL,
+    "poster": AttrType.URL,
+    "preload": AttrType.TEXT,
+    "src": AttrType.URL,
+    "width": AttrType.TEXT,
+  },
+}
