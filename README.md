@@ -43,6 +43,7 @@ print(doc.render())
 
 ```python
 from bricka.elements import *
+from bricka.style import Style
 
 headers = ["Fruit", "Color"]
 
@@ -88,8 +89,8 @@ with Table(css=style["table"]) as table:
         Td(fruit[0], css=style["td"])
         Td(fruit[1], css=style["td"])
 
-  print(table.render())
-  print(table.render_css())
+print(table.render())
+print(table.render_css())
 ```
 
 Generated HTML.
