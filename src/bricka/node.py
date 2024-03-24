@@ -6,6 +6,9 @@ from copy import deepcopy
 from enum import Enum
 from typing import cast
 import urllib.parse
+from bricka.stylesheet import StyleSheet
+from bricka.style import Rule
+from bricka.attrs import GlobalAttrs
 
 class AttrType(Enum):
   BOOL = 0
@@ -29,12 +32,16 @@ class Node(ABC):
 
   _with_stack: dict[str | None, list[list["Node"]]] = {}
 
-  def __init__(self, *nodes: "Node", **attrs) -> None:
+  def __init__(self, *nodes: "Node | str", **attrs) -> None:
     self.parent: "Node | None" = None
     self._nodes: list[Node] = []
     self._attrs: dict[str, str] = {}
+    self._css: StyleSheet = StyleSheet()
 
     for attr in attrs:
+      if attr == "css":
+        continue
+
       self._attrs[attr] = attrs[attr]
 
     for node in nodes:
@@ -50,6 +57,10 @@ class Node(ABC):
   @property
   def attrs(self) -> dict[str, str]:
     return self._attrs    
+  
+  @property
+  def css(self) -> StyleSheet:
+    return self._css
 
   def __str__(self) -> str:
     return self.render()
@@ -283,6 +294,9 @@ class Node(ABC):
       attrs.append(output)
 
     return " ".join(attrs).strip()
+  
+  def media_layers(self) -> dict:  
+    return {}
 
 class Text(Node):
   def __init__(self, text: str = "", escape=True) -> None:
@@ -334,6 +348,92 @@ class Text(Node):
 class Element(Node): 
   tag_name: str = "element"
 
+  def __init__(self, *nodes, **kwargs) -> None:
+    super().__init__(*nodes, **kwargs)
+
+    self._css: StyleSheet = StyleSheet()
+    css = kwargs.get("css", None)
+    if css is not None:
+      self.css = css
+
+  @property
+  def attrs(self) -> GlobalAttrs:
+    return cast(GlobalAttrs, self._attrs)      
+
+  @property
+  def css(self) -> StyleSheet:
+    return self._css
+
+  @css.setter
+  def css(self, rules: Rule | list[Rule] | None):
+    if rules is None: # TODO: review
+      return 
+    
+    if type(rules) != list:
+      rules = [cast(Rule, rules)]
+
+    for rule in rules:
+      if type(rule) != dict:
+        return # TODO: remove workaround
+        # raise TypeError(f"Argument 'rule' must be of type 'Rule': {rule}")  
+
+      self._css.append_rule(rule)    
+
+  def render_attrs(self) -> str:
+    classes = self.attrs.get("class_", "") # Preserve the class attribute
+    if (class_names := self.class_names()):
+      class_names.append(classes)
+      self.attrs["class_"] = " ".join(class_names)
+
+    attrs = super().render_attrs()
+
+    if classes:
+      self.attrs["class_"] = classes
+
+    return attrs    
+  
+  def class_names(self) -> list[str]: 
+    names: list[str] = []
+    media_layers = self.css.media_layers()
+
+    for media, layers in media_layers.items():
+      for i, layer in enumerate(layers):
+        for selector in layer:
+          suffix = "" if i == 0 else str(i)
+          class_name = selector.split(":", 1)[0]
+          selector = class_name + suffix
+          names.append(selector)
+
+    return names   
+  
+  def media_layers(self) -> dict:  
+    return self.css.media_layers()
+  
+  # As a polyfill for layers, selector names are suffixed with the layer number to ensure that the last style always wins.
+  def render_css(self) -> str:
+    output = ""
+    # for media, layers in self.css.media_layers().items():
+    for media, layers in self.media_layers().items():
+      opening = f'\n@media {media} {{\n' if media else ""
+      indent = "  " if media else ""
+      closing = f'}}\n' if media else ""
+
+      output += opening
+      for i, layer in enumerate(layers):
+        for selector, declaration in layer.items():
+          suffix = "" if i == 0 else str(i)
+          parts = selector.split(":", 1)
+          class_name = parts[0]
+          pseudo = ""
+          if len(parts) >= 2:
+            pseudo = ":" + parts[1]
+
+          selector = class_name + suffix + pseudo
+          output += f"{indent}.{selector} {{ {declaration} }}\n"
+      output += closing    
+
+    return output  
+
 class Void(Element):
   tag_name: str = "void"
 
@@ -348,6 +448,13 @@ class Void(Element):
   
 class Container(Element):
   tag_name: str = "container"
+
+  def media_layers(self) -> dict:  
+    layers = self.css.media_layers()
+    for node in self._nodes:
+      layers = StyleSheet.merge_media_layers(layers, node.media_layers())
+
+    return layers 
 
 class Root(Container):
   tag_name: str = "root"

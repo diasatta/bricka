@@ -1,4 +1,5 @@
 from typing import Literal
+from bricka.style import Rule
 
 AReferrerpolicyL = Literal[
   "no-referrer",
@@ -727,6 +728,8 @@ VideoPreloadL = Literal[
 from typing import TypedDict
 
 class GlobalAttrs(TypedDict, total=False):
+  css: Rule | list[Rule]
+
   accesskey: str
   autocapitalize: str
   autofocus: bool
