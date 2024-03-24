@@ -2,6 +2,43 @@
 
 
 
+## v0.3.0 (2024-03-24)
+
+### Build
+
+* build: configure pylance to ignore unused expressions
+
+Using left and right shift operators to append nodes are highlighted by pylance as unused expressions, this new setting suppresses the warning. ([`725111e`](https://github.com/diasatta/bricka/commit/725111e6df25325d106ffe07e2a8c044026ee1c2))
+
+### Documentation
+
+* docs: update README.md ([`c210fae`](https://github.com/diasatta/bricka/commit/c210faedc6e92a2f2e22318859cc1199adcc234b))
+
+### Feature
+
+* feat: add support for styling
+
+Bricka&#39;s components can now be directly styled from python, no need to write CSS manually.
+
+The style API is inspired by StyleX.
+
+Styles are authored as python typed dicts, with autocompletion for CSS property names.  Most of property values are constrained to a limited set of values, mimicking Tailwindcss constraints. Autocompletion is also supported for constrained values.
+
+Bricka generates atomic CSS classes from the styles passed to html components, and supports automatic resolution of conflicting properties. Conflicting properties are inserted in different CSS layers so that the last applied style always wins.
+
+Currently, Bricka supports pseudo-class selectors and media queries. ([`ba9dc18`](https://github.com/diasatta/bricka/commit/ba9dc180bdf90a3453ebd5cc77b3710c99773520))
+
+### Fix
+
+* fix: fix node&#39;s __enter__ method return type ([`5c38cc1`](https://github.com/diasatta/bricka/commit/5c38cc1878bb83e0ed1d7296420ae0fefeb90959))
+
+* fix: fix constructor signature for container elements to accept int, float, str ([`64d0342`](https://github.com/diasatta/bricka/commit/64d0342f68b6813cf6c3e8b8d11803d6959a34d0))
+
+### Test
+
+* test: add tests for styling ([`9209e72`](https://github.com/diasatta/bricka/commit/9209e7204e300d438141262055d3f7b712ca3bbe))
+
+
 ## v0.2.0 (2024-03-19)
 
 ### Build
