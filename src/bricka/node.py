@@ -196,7 +196,7 @@ class Node(ABC):
 
     return old_parent 
    
-  def __enter__(self) -> "Node":   
+  def __enter__(self): # Let the type checker infer the final return type depending on the calling html element 
     Node._with_stack[_with_stack_var.get()].append([])
     return self
 
