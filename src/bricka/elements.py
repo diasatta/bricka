@@ -10,7 +10,7 @@ class A(Container):
   tag_name: str = "a"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[AAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[AAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -61,7 +61,7 @@ class Audio(Container):
   """
   tag_name: str = "audio"
 
-  def __init__(self, *children: Node, **attrs: Unpack[AudioAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[AudioAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -111,7 +111,7 @@ class Blockquote(Container):
   """
   tag_name: str = "blockquote"
 
-  def __init__(self, *children: Node, **attrs: Unpack[BlockquoteAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[BlockquoteAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -124,7 +124,7 @@ class Body(Container):
   """
   tag_name: str = "body"
 
-  def __init__(self, *children: Node, **attrs: Unpack[BodyAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[BodyAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -144,7 +144,7 @@ class Button(Container):
   tag_name: str = "button"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[ButtonAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[ButtonAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -159,7 +159,7 @@ class Canvas(Container):
   """
   tag_name: str = "canvas"
 
-  def __init__(self, *children: Node, **attrs: Unpack[CanvasAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[CanvasAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -206,7 +206,7 @@ class Colgroup(Container):
   """
   tag_name: str = "colgroup"
 
-  def __init__(self, *children: Node, **attrs: Unpack[ColgroupAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[ColgroupAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -221,7 +221,7 @@ class Data(Container):
   """
   tag_name: str = "data"
 
-  def __init__(self, *children: Node, **attrs: Unpack[DataAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[DataAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -247,7 +247,7 @@ class Del(Container):
   tag_name: str = "del"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[DelAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[DelAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -260,7 +260,7 @@ class Details(Container):
   """
   tag_name: str = "details"
 
-  def __init__(self, *children: Node, **attrs: Unpack[DetailsAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[DetailsAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -280,7 +280,7 @@ class Dialog(Container):
   """
   tag_name: str = "dialog"
 
-  def __init__(self, *children: Node, **attrs: Unpack[DialogAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[DialogAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -335,7 +335,7 @@ class Fieldset(Container):
   """
   tag_name: str = "fieldset"
 
-  def __init__(self, *children: Node, **attrs: Unpack[FieldsetAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[FieldsetAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -366,7 +366,7 @@ class Form(Container):
   """
   tag_name: str = "form"
 
-  def __init__(self, *children: Node, **attrs: Unpack[FormAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[FormAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -447,7 +447,7 @@ class Html(Container):
   """
   tag_name: str = "html"
 
-  def __init__(self, *children: Node, **attrs: Unpack[HtmlAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[HtmlAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -472,7 +472,7 @@ class Iframe(Container):
   """
   tag_name: str = "iframe"
 
-  def __init__(self, *children: Node, **attrs: Unpack[IframeAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[IframeAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -512,7 +512,7 @@ class Ins(Container):
   tag_name: str = "ins"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[InsAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[InsAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -537,7 +537,7 @@ class Label(Container):
   tag_name: str = "label"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[LabelAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[LabelAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -558,7 +558,7 @@ class Li(Container):
   tag_name: str = "li"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[LiAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[LiAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -592,7 +592,7 @@ class Map(Container):
   """
   tag_name: str = "map"
 
-  def __init__(self, *children: Node, **attrs: Unpack[MapAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[MapAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -631,7 +631,7 @@ class Meter(Container):
   """
   tag_name: str = "meter"
 
-  def __init__(self, *children: Node, **attrs: Unpack[MeterAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[MeterAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -661,7 +661,7 @@ class Object(Container):
   """
   tag_name: str = "object"
 
-  def __init__(self, *children: Node, **attrs: Unpack[ObjectAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[ObjectAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -674,7 +674,7 @@ class Ol(Container):
   """
   tag_name: str = "ol"
 
-  def __init__(self, *children: Node, **attrs: Unpack[OlAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[OlAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -687,7 +687,7 @@ class Optgroup(Container):
   """
   tag_name: str = "optgroup"
 
-  def __init__(self, *children: Node, **attrs: Unpack[OptgroupAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[OptgroupAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -701,7 +701,7 @@ class Option(Container):
   tag_name: str = "option"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[OptionAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[OptionAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -714,7 +714,7 @@ class Output(Container):
   """
   tag_name: str = "output"
 
-  def __init__(self, *children: Node, **attrs: Unpack[OutputAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[OutputAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -748,7 +748,7 @@ class Progress(Container):
   """
   tag_name: str = "progress"
 
-  def __init__(self, *children: Node, **attrs: Unpack[ProgressAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[ProgressAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -764,7 +764,7 @@ class Q(Container):
   tag_name: str = "q"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[QAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[QAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -816,7 +816,7 @@ class Script(Container):
   """
   tag_name: str = "script"
 
-  def __init__(self, *children: Node, **attrs: Unpack[ScriptAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[ScriptAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -835,7 +835,7 @@ class Select(Container):
   """
   tag_name: str = "select"
 
-  def __init__(self, *children: Node, **attrs: Unpack[SelectAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[SelectAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -848,7 +848,7 @@ class Slot(Container):
   """
   tag_name: str = "slot"
 
-  def __init__(self, *children: Node, **attrs: Unpack[SlotAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[SlotAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -895,7 +895,7 @@ class Style(Container):
   """
   tag_name: str = "style"
 
-  def __init__(self, *children: Node, **attrs: Unpack[StyleAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[StyleAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -949,7 +949,7 @@ class Td(Container):
   tag_name: str = "td"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[TdAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[TdAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -968,7 +968,7 @@ class Textarea(Container):
   """
   tag_name: str = "textarea"
 
-  def __init__(self, *children: Node, **attrs: Unpack[TextareaAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[TextareaAttrs]) -> None:
     super().__init__(*children, **attrs) # type: ignore
 
   @property
@@ -988,7 +988,7 @@ class Th(Container):
   tag_name: str = "th"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[ThAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[ThAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -1008,7 +1008,7 @@ class Time(Container):
   tag_name: str = "time"
   inline: bool = True
 
-  def __init__(self, *children: Node, **attrs: Unpack[TimeAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[TimeAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
@@ -1071,7 +1071,7 @@ class Video(Container):
   """
   tag_name: str = "video"
 
-  def __init__(self, *children: Node, **attrs: Unpack[VideoAttrs]) -> None:
+  def __init__(self, *children: Node | str | int | float, **attrs: Unpack[VideoAttrs]) -> None:
     super().__init__(*children, **attrs)
 
   @property
