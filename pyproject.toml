@@ -27,3 +27,6 @@ version_toml = [
 branch = "main" 
 changelog_file = "CHANGELOG.md"
 build_command = "pip install poetry && poetry build"
+
+[tool.pyright]
+reportUnusedExpression = "none"
