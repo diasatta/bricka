@@ -2,6 +2,13 @@
 
 
 
+## v0.3.1 (2024-03-24)
+
+### Fix
+
+* fix: fix python code in README.md ([`a3ff69f`](https://github.com/diasatta/bricka/commit/a3ff69f755a46840b5edc76e249797f13bf9bcf2))
+
+
 ## v0.3.0 (2024-03-24)
 
 ### Build
