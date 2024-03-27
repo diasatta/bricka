@@ -2,6 +2,13 @@
 
 
 
+## v0.3.3 (2024-03-27)
+
+### Fix
+
+* fix: fix typo in README.md ([`c74ebbd`](https://github.com/diasatta/bricka/commit/c74ebbd51d63177e60541026e1b644d525d3f524))
+
+
 ## v0.3.2 (2024-03-27)
 
 ### Documentation
