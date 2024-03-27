@@ -124,7 +124,7 @@ class StyleSheet:
     name_length = 7
     declaration = self.declaration(prop_name, media)
 
-    return "f" + hashlib.sha1((media + prop_name + declaration).encode()).hexdigest()[:name_length]
+    return "b" + hashlib.sha1((media + prop_name + declaration).encode()).hexdigest()[:name_length]
   
   def selector(self, prop_name, media: str = "") -> str:
     return self.class_name(prop_name, media) + self._pseudo_name(prop_name)
