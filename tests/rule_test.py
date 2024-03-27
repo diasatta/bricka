@@ -270,8 +270,8 @@ class TestRuleLayers():
 
     assert sheet.media_layers() == {
       "": [{ # Single layer
-        "f900f0eb": "border-width: 2px;", 
-        "f594b855": "border-style: solid;"
+        "b900f0eb": "border-width: 2px;", 
+        "b594b855": "border-style: solid;"
       }]
     }
 
@@ -293,13 +293,13 @@ class TestRuleLayers():
     assert sheet.media_layers() == {
       "": [
         {
-          "f8d6e0e8": "border-width: 1px;", 
-          "f594b855": "border-style: solid;"
+          "b8d6e0e8": "border-width: 1px;", 
+          "b594b855": "border-style: solid;"
         }
       ],
       "media": [
         {
-          "f9d6586b": "border-width: 2px;"
+          "b9d6586b": "border-width: 2px;"
         }
       ]
     }
@@ -319,11 +319,11 @@ class TestRuleLayers():
     assert sheet.media_layers() == {
       "": [
         { # Layer 1
-        "f8d6e0e8": "border-width: 1px;", 
-        "f594b855": "border-style: solid;"
+        "b8d6e0e8": "border-width: 1px;", 
+        "b594b855": "border-style: solid;"
         },
         { # Layer 2
-        "f051471b": "border-top-style: dotted;", 
+        "b051471b": "border-top-style: dotted;", 
         }
       ]
     }
@@ -357,18 +357,18 @@ class TestRuleLayers():
     assert layers == {
       "": [
         {
-          "f987ead0": "border-style: dotted;", 
-          "f900f0eb": "border-width: 2px;",
-          "f36b21eb": "border-top-style: ridge;",
+          "b987ead0": "border-style: dotted;", 
+          "b900f0eb": "border-width: 2px;",
+          "b36b21eb": "border-top-style: ridge;",
         },
         {
-          "f38c323c": "border-top-style: groove;"
+          "b38c323c": "border-top-style: groove;"
         },
       ],
       "media": [
         {
-          "f77d5393": "border-width: 1px;", 
-          "f633a431": "border-style: solid;"
+          "b77d5393": "border-width: 1px;", 
+          "b633a431": "border-style: solid;"
         }
       ]
     }
@@ -400,11 +400,11 @@ class TestStyling():
     assert foo.media_layers() == {
       "": [
         {
-          "f6fa6fa2": "background-color: blue;", 
-          "f94fac93": "color: black;"
+          "b6fa6fa2": "background-color: blue;", 
+          "b94fac93": "color: black;"
         }, 
         {
-          "f4fcc55d:hover": "background-color: red;"
+          "b4fcc55d:hover": "background-color: red;"
         }
       ]
     }
@@ -427,7 +427,7 @@ class TestStyling():
     }
 
     foo = Element(css=[style["rule1"], style["rule2"]])
-    assert foo.class_names() == ['f94fac93', 'f6fa6fa2', 'f4fcc55d1']
+    assert foo.class_names() == ['b94fac93', 'b6fa6fa2', 'b4fcc55d1']
 
   def test_element_render_css(self):
     style: Style = {
@@ -458,12 +458,12 @@ class TestStyling():
       f.write(foo.render_css())
 
     assert foo.render_css() == """\
-.f94fac93 { color: black; }
-.f6fa6fa2 { background-color: blue; }
-.f4fcc55d1:hover { background-color: red; }
+.b94fac93 { color: black; }
+.b6fa6fa2 { background-color: blue; }
+.b4fcc55d1:hover { background-color: red; }
 
 @media (min-width: 700px) {
-  .fcb87822 { text-align: center; }
-  .ff0d072f:hover { color: black; }
+  .bcb87822 { text-align: center; }
+  .bf0d072f:hover { color: black; }
 }
 """
