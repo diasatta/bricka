@@ -1,5 +1,5 @@
 # Bricka
-Build server-side reusable styled HTML components with python.
+Build reusable and styled server-side HTML components with python.
 
 Bricka is a library to generate HTML markup and CSS stylesheets without leaving python. The main purpose of the library is the building of reusable server-side HTML components, stylable directly from python. 
 
@@ -65,7 +65,7 @@ One of the main features of Bricka is the ability to style components without le
 
 Before rendering, a lot of processing is applied to styles in order to solve common problems related to conflicting CSS properties, and also to optimize CSS output size. After processing the user defined styles, Bricka generates CSS atomic classes.
 
-To give an illustration, let's build a simple style HTML table.
+To give an illustration, let's build a simple styled HTML table.
 
 ```python
 from bricka.elements import Table, Tbody, Thead, Th, Td, Tr
@@ -95,8 +95,10 @@ style: Style = {
     "padding-x": "0.75rem",
   },
   "tr": {
+    "color": "blue",
     ":hover": {
-      "background-color": "fuchsia"
+      "color": "navy",
+      "background-color": "fuchsia",
     }
   },
 }
@@ -115,6 +117,7 @@ with Table(css=style["table"]) as table:
         Td(fruit[0], css=style["td"])
         Td(fruit[1], css=style["td"])
 
+        
 print(table.render())
 ```
 
@@ -140,27 +143,27 @@ Now, our component is ready to be rendered. Calling `render()` on the `table` co
     </tr>
   </thead>
   <tbody>
-    <tr class="beec5036 ">
+    <tr class="b30ef48f bb449833 b8c123ec1 ">
       <td class="be6697e7 ba3a81d2 bd93d40d ">1</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Banana</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Yellow</td>
     </tr>
-    <tr class="beec5036 ">
+    <tr class="b30ef48f bb449833 b8c123ec1 ">
       <td class="be6697e7 ba3a81d2 bd93d40d ">2</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Orange</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Orange</td>
     </tr>
-    <tr class="beec5036 ">
+    <tr class="b30ef48f bb449833 b8c123ec1 ">
       <td class="be6697e7 ba3a81d2 bd93d40d ">3</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Apricot</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Orange</td>
     </tr>
-    <tr class="beec5036 ">
+    <tr class="b30ef48f bb449833 b8c123ec1 ">
       <td class="be6697e7 ba3a81d2 bd93d40d ">4</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Apple</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Green</td>
     </tr>
-    <tr class="beec5036 ">
+    <tr class="b30ef48f bb449833 b8c123ec1 ">
       <td class="be6697e7 ba3a81d2 bd93d40d ">5</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Lemon</td>
       <td class="be6697e7 ba3a81d2 bd93d40d ">Yellow</td>
@@ -187,7 +190,9 @@ The CSS output is shown below. It is up to you how to use the CSS output:
 .b10a659d { background-color: aqua; }
 .ba3a81d2 { padding-left: 0.75rem; }
 .bd93d40d { padding-right: 0.75rem; }
-.beec5036:hover { background-color: fuchsia; }
+.b30ef48f { color: blue; }
+.bb449833:hover { background-color: fuchsia; }
+.b8c123ec1:hover { color: navy; }
 ```
 
 ## Features
