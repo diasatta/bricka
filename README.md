@@ -1,12 +1,29 @@
 # Bricka
-Build reusable styled HTML components with python.
+Build server-side reusable styled HTML components with python.
+
+Bricka is a library to generate HTML markup and CSS stylesheets without leaving python. The main purpose of the library is the building of reusable server-side HTML components, stylable directly from python. 
+
+Use cases:
+  - Create styled HTML reusable components
+  - Template engine replacement
+  - Generate HTML reports from data
+  - Build static site generators
 
 ## Installation
+To install Bricka from a command line:
 
-`pip install bricka`
+```shell
+pip install bricka
+```
 
 ## Usage
-### Creating a basic HTML document.
+### Creating a basic HTML document
+
+In Bricka, HTML elements are defined as Python classes. There is a straightforward translation from HTML to Bricka, just by capitalizing the element's first letter.
+
+HTML attribute names are written as is, except for conflicting attributes, which need a trailing underscore: `class` becomes `class_`.
+
+Let's create our first Bricka component using the `with` context manager, which allows easily buiding HTML elements hierarchies.
 
 ```python
 from bricka.elements import *
@@ -15,7 +32,7 @@ with Html(lang="en") as doc:
   with Head():
     Meta(charset="UTF-8")
     Meta(name="viewport", content="width=device-width, initial-scale=1.0") 
-    Link(rel="stylesheet", href=f"style.css")
+    Link(rel="stylesheet", href="style.css")
     Title("Document", class_="title")    
 
   with Body():
@@ -23,6 +40,10 @@ with Html(lang="en") as doc:
 
 print(doc.render())  
 ```
+
+In the above example, we created a component of type `Html` named `doc`, with a hierarchy of children. Attributes are passed as keyword arguments to each element's constructor.
+
+To get the HTML out of the component, we call the `render()` method, generating a well formatted HTML markup as a string, as shown below.
 
 ```html
 <!DOCTYPE html>
@@ -40,9 +61,14 @@ print(doc.render())
 ```
 
 ### Creating a styled table
+One of the main features of Bricka is the ability to style components without leaving Python. Styles are defined as Python dicts, and then passed to HTML elements as arguments.
+
+Before rendering, a lot of processing is applied to styles in order to solve common problems related to conflicting CSS properties, and also to optimize CSS output size. After processing the user defined styles, Bricka generates CSS atomic classes.
+
+To give an illustration, let's build a simple style HTML table.
 
 ```python
-from bricka.elements import *
+from bricka.elements import Table, Tbody, Thead, Th, Td, Tr
 from bricka.style import Style
 
 headers = ["Fruit", "Color"]
@@ -90,60 +116,78 @@ with Table(css=style["table"]) as table:
         Td(fruit[1], css=style["td"])
 
 print(table.render())
-print(table.render_css())
 ```
 
-Generated HTML.
+In the above example, after defining the `fruits` data as a list, we declare a dict named `style` with a type hint `Style`. This type hint is necessary to get autocompletion for CSS property names and property values. 
+
+Inside the `style` dict, we have named CSS rules, with arbitray names, as nested dicts. Inside a rule, there are CSS properties with their values.
+
+All CSS properties' values are entered as strings. For CSS shorthand properties, ie, having multiple values, a tuple is used to group the values, as for the `border` propery.
+
+In the `tr` rule, a pseudo-class is defined as a nested rule with the pseudo-class `:hover` as name.
+
+Once the style is defined, it is applied to the elements using the `css` keyword argument. You can choose which rules are applied to each element using a dict-like syntax to select a rule from the `style`.
+
+Now, our component is ready to be rendered. Calling `render()` on the `table` component, renders the HTML markup with the class attribute filled using the generated CSS atomic classes.
 
 ```html
-<table class="fe6697e7 ff18cedd ">
+<table class="be6697e7 bf18cedd ">
   <thead>
     <tr>
-      <th class="f1acb709 f10a659d fe6697e7 fa3a81d2 fd93d40d ">#</th>
-      <th class="f1acb709 f10a659d fe6697e7 fa3a81d2 fd93d40d ">Fruit</th>
-      <th class="f1acb709 f10a659d fe6697e7 fa3a81d2 fd93d40d ">Color</th>
+      <th class="b1acb709 b10a659d be6697e7 ba3a81d2 bd93d40d ">#</th>
+      <th class="b1acb709 b10a659d be6697e7 ba3a81d2 bd93d40d ">Fruit</th>
+      <th class="b1acb709 b10a659d be6697e7 ba3a81d2 bd93d40d ">Color</th>
     </tr>
   </thead>
   <tbody>
-    <tr class="feec5036 ">
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">1</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Banana</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Yellow</td>
+    <tr class="beec5036 ">
+      <td class="be6697e7 ba3a81d2 bd93d40d ">1</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Banana</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Yellow</td>
     </tr>
-    <tr class="feec5036 ">
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">2</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Orange</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Orange</td>
+    <tr class="beec5036 ">
+      <td class="be6697e7 ba3a81d2 bd93d40d ">2</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Orange</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Orange</td>
     </tr>
-    <tr class="feec5036 ">
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">3</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Apricot</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Orange</td>
+    <tr class="beec5036 ">
+      <td class="be6697e7 ba3a81d2 bd93d40d ">3</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Apricot</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Orange</td>
     </tr>
-    <tr class="feec5036 ">
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">4</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Apple</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Green</td>
+    <tr class="beec5036 ">
+      <td class="be6697e7 ba3a81d2 bd93d40d ">4</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Apple</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Green</td>
     </tr>
-    <tr class="feec5036 ">
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">5</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Lemon</td>
-      <td class="fe6697e7 fa3a81d2 fd93d40d ">Yellow</td>
+    <tr class="beec5036 ">
+      <td class="be6697e7 ba3a81d2 bd93d40d ">5</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Lemon</td>
+      <td class="be6697e7 ba3a81d2 bd93d40d ">Yellow</td>
     </tr>
   </tbody>
 </table>
 ```
 
-Generated CSS.
+To get the final CSS output as atomic classes, use the `render_css()` method. 
+
+```python
+print(table.render_css())
+```
+
+The CSS output is shown below. It is up to you how to use the CSS output: 
+
+  - Write the output to a `style.css` file and insert a `Link` element in your HTML document to reference the `style.css` stylesheet
+  - Or insert the output in a `Style` element in your HTML document.
 
 ```css
-.fe6697e7 { border: 1px solid black; }
-.ff18cedd { border-collapse: collapse; }
-.f1acb709 { font-weight: 600; }
-.f10a659d { background-color: aqua; }
-.fa3a81d2 { padding-left: 0.75rem; }
-.fd93d40d { padding-right: 0.75rem; }
-.feec5036:hover { background-color: fuchsia; }
+.be6697e7 { border: 1px solid black; }
+.bf18cedd { border-collapse: collapse; }
+.b1acb709 { font-weight: 600; }
+.b10a659d { background-color: aqua; }
+.ba3a81d2 { padding-left: 0.75rem; }
+.bd93d40d { padding-right: 0.75rem; }
+.beec5036:hover { background-color: fuchsia; }
 ```
 
 ## Features
