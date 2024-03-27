@@ -2,6 +2,23 @@
 
 
 
+## v0.3.2 (2024-03-27)
+
+### Documentation
+
+* docs: update README.md ([`1ba5890`](https://github.com/diasatta/bricka/commit/1ba589081314f56b1576f18513bc280deff3c71e))
+
+* docs: update README.md ([`1023cc5`](https://github.com/diasatta/bricka/commit/1023cc578cf295a9b612153203a1893455c4943d))
+
+### Fix
+
+* fix: fix CSS class name prefix ([`5de8c18`](https://github.com/diasatta/bricka/commit/5de8c186d7a22974d1ec01b7227bbf508908350e))
+
+### Test
+
+* test: fix test with the new class name prefix ([`dd340bf`](https://github.com/diasatta/bricka/commit/dd340bfc6dfa6555f49acf98f9b0ab6cd59f3e63))
+
+
 ## v0.3.1 (2024-03-24)
 
 ### Fix
