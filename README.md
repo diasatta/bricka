@@ -123,7 +123,7 @@ print(table.render())
 
 In the above example, after defining the `fruits` data as a list, we declare a dict named `style` with a type hint `Style`. This type hint is necessary to get autocompletion for CSS property names and property values. 
 
-Inside the `style` dict, we have named CSS rules, with arbitray names, as nested dicts. Inside a rule, there are CSS properties with their values.
+Inside the `style` dict, we have named CSS rules, with arbitrary names, as nested dicts. Inside a rule, there are CSS properties with their values.
 
 All CSS properties' values are entered as strings. For CSS shorthand properties, ie, having multiple values, a tuple is used to group the values, as for the `border` propery.
 
