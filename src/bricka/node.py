@@ -271,10 +271,10 @@ class Node(ABC):
     if value is None:
       return ""
 
-    if self.attr_type(self.tag_name, name) == AttrType.URL:
-      return f'{name}="{urllib.parse.quote(value)}"' # type: ignore
-    else:  
-      return f'{name}="{html.escape(str(value), quote=True)}"'
+    # if self.attr_type(self.tag_name, name) == AttrType.URL:
+    #   return f'{name}="{urllib.parse.quote(value)}"' # type: ignore
+    # else:  
+    return f'{name}="{html.escape(str(value), quote=True)}"'
 
   def render_attrs(self) -> str:
     attrs: list[str] = []
