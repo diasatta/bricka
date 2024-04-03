@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bricka"
-version = "0.3.3"
+version = "0.3.4"
 description = "Build reusable styled HTML components with python."
 authors = ["Said Atta <saidattaenp@yahoo.fr>"]
 license = "MIT"

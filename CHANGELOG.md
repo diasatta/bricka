@@ -2,6 +2,17 @@
 
 
 
+## v0.3.4 (2024-04-03)
+
+### Fix
+
+* fix: remove encoding for URL attributes ([`84c974e`](https://github.com/diasatta/bricka/commit/84c974e13c21b8586e4e2b4f960a41f5cbaedbe7))
+
+### Test
+
+* test: update test for URL attributes ([`aced30a`](https://github.com/diasatta/bricka/commit/aced30aec68032af8ff21f398f7b1fe7c2b39bc2))
+
+
 ## v0.3.3 (2024-03-27)
 
 ### Fix
