@@ -54,7 +54,7 @@ class TestElementAttrs():
     assert Element(itemscope=True).render_attrs() == 'itemscope'
 
   def test_itemtype(self) -> None:
-    assert Element(itemtype='www.foo.bar/baz/?quux="1"').render_attrs() == 'itemtype="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Element(itemtype='www.foo.bar/baz/?quux="1"').render_attrs() == 'itemtype="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_lang(self) -> None:
     assert Element(lang="foo").render_attrs() == 'lang="foo"'
@@ -97,13 +97,13 @@ class TestAAttrs():
     assert A(download="foo").render_attrs() == 'download="foo"'
 
   def test_href(self) -> None:
-    assert A(href='www.foo.bar/baz/?quux="1"').render_attrs() == 'href="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert A(href='www.foo.bar/baz/?quux="1"').render_attrs() == 'href="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_hreflang(self) -> None:
     assert A(hreflang="foo").render_attrs() == 'hreflang="foo"'
 
   def test_ping(self) -> None:
-    assert A(ping='www.foo.bar/baz/?quux="1"').render_attrs() == 'ping="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert A(ping='www.foo.bar/baz/?quux="1"').render_attrs() == 'ping="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_referrerpolicy(self) -> None:
     assert A(referrerpolicy="no-referrer").render_attrs() == 'referrerpolicy="no-referrer"'
@@ -128,10 +128,10 @@ class TestAreaAttrs():
     assert Area(download="foo").render_attrs() == 'download="foo"'
 
   def test_href(self) -> None:
-    assert Area(href='www.foo.bar/baz/?quux="1"').render_attrs() == 'href="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Area(href='www.foo.bar/baz/?quux="1"').render_attrs() == 'href="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_ping(self) -> None:
-    assert Area(ping='www.foo.bar/baz/?quux="1"').render_attrs() == 'ping="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Area(ping='www.foo.bar/baz/?quux="1"').render_attrs() == 'ping="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_referrerpolicy(self) -> None:
     assert Area(referrerpolicy="no-referrer").render_attrs() == 'referrerpolicy="no-referrer"'
@@ -165,18 +165,18 @@ class TestAudioAttrs():
     assert Audio(preload="auto").render_attrs() == 'preload="auto"'
 
   def test_src(self) -> None:
-    assert Audio(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Audio(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
 class TestBaseAttrs():
   def test_href(self) -> None:
-    assert Base(href='www.foo.bar/baz/?quux="1"').render_attrs() == 'href="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Base(href='www.foo.bar/baz/?quux="1"').render_attrs() == 'href="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_target(self) -> None:
     assert Base(target="_blank").render_attrs() == 'target="_blank"'
 
 class TestBlockquoteAttrs():
   def test_cite(self) -> None:
-    assert Blockquote(cite='www.foo.bar/baz/?quux="1"').render_attrs() == 'cite="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Blockquote(cite='www.foo.bar/baz/?quux="1"').render_attrs() == 'cite="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
 class TestBodyAttrs():
   def test_onafterprint(self) -> None:
@@ -244,7 +244,7 @@ class TestButtonAttrs():
     assert Button(form="foo").render_attrs() == 'form="foo"'
 
   def test_formaction(self) -> None:
-    assert Button(formaction='www.foo.bar/baz/?quux="1"').render_attrs() == 'formaction="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Button(formaction='www.foo.bar/baz/?quux="1"').render_attrs() == 'formaction="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_formenctype(self) -> None:
     assert Button(formenctype="application/x-www-form-urlencoded").render_attrs() == 'formenctype="application/x-www-form-urlencoded"'
@@ -288,7 +288,7 @@ class TestDataAttrs():
 
 class TestDelAttrs():
   def test_cite(self) -> None:
-    assert Del(cite='www.foo.bar/baz/?quux="1"').render_attrs() == 'cite="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Del(cite='www.foo.bar/baz/?quux="1"').render_attrs() == 'cite="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_datetime(self) -> None:
     assert Del(datetime="foo").render_attrs() == 'datetime="foo"'
@@ -306,7 +306,7 @@ class TestEmbedAttrs():
     assert Embed(height="foo").render_attrs() == 'height="foo"'
 
   def test_src(self) -> None:
-    assert Embed(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Embed(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_type(self) -> None:
     assert Embed(type="foo").render_attrs() == 'type="foo"'
@@ -329,7 +329,7 @@ class TestFormAttrs():
     assert Form(accept_charset="foo").render_attrs() == 'accept-charset="foo"'
 
   def test_action(self) -> None:
-    assert Form(action='www.foo.bar/baz/?quux="1"').render_attrs() == 'action="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Form(action='www.foo.bar/baz/?quux="1"').render_attrs() == 'action="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_autocomplete(self) -> None:
     assert Form(autocomplete="additional-name").render_attrs() == 'autocomplete="additional-name"'
@@ -354,7 +354,7 @@ class TestFormAttrs():
 
 class TestHtmlAttrs():
   def test_xmlns(self) -> None:
-    assert Html(xmlns='www.foo.bar/baz/?quux="1"').render_attrs() == 'xmlns="www.foo.bar/baz/%3Fquux%3D%221%22"'  # type: ignore
+    assert Html(xmlns='www.foo.bar/baz/?quux="1"').render_attrs() == 'xmlns="www.foo.bar/baz/?quux=&quot;1&quot;"'  # type: ignore
 
 class TestIframeAttrs():
   def test_allow(self) -> None:
@@ -379,7 +379,7 @@ class TestIframeAttrs():
     assert Iframe(sandbox="allow-forms").render_attrs() == 'sandbox="allow-forms"'
 
   def test_src(self) -> None:
-    assert Iframe(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Iframe(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_srcdoc(self) -> None:
     assert Iframe(srcdoc='<foo class="bar"></foo>').render_attrs() == 'srcdoc="&lt;foo class=&quot;bar&quot;&gt;&lt;/foo&gt;"'
@@ -416,13 +416,13 @@ class TestImgAttrs():
     assert Img(sizes="foo").render_attrs() == 'sizes="foo"'
 
   def test_src(self) -> None:
-    assert Img(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Img(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_srcset(self) -> None:
-    assert Img(srcset='www.foo.bar/baz/?quux="1"').render_attrs() == 'srcset="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Img(srcset='www.foo.bar/baz/?quux="1"').render_attrs() == 'srcset="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_usemap(self) -> None:
-    assert Img(usemap='www.foo.bar/baz/?quux="1"').render_attrs() == 'usemap="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Img(usemap='www.foo.bar/baz/?quux="1"').render_attrs() == 'usemap="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_width(self) -> None:
     assert Img(width="foo").render_attrs() == 'width="foo"'
@@ -456,7 +456,7 @@ class TestInputAttrs():
     assert Input(form="foo").render_attrs() == 'form="foo"'
 
   def test_formaction(self) -> None:
-    assert Input(formaction='www.foo.bar/baz/?quux="1"').render_attrs() == 'formaction="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Input(formaction='www.foo.bar/baz/?quux="1"').render_attrs() == 'formaction="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_formenctype(self) -> None:
     assert Input(formenctype="application/x-www-form-urlencoded").render_attrs() == 'formenctype="application/x-www-form-urlencoded"'
@@ -510,7 +510,7 @@ class TestInputAttrs():
     assert Input(size="foo").render_attrs() == 'size="foo"'
 
   def test_src(self) -> None:
-    assert Input(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Input(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_step(self) -> None:
     assert Input(step="foo").render_attrs() == 'step="foo"'
@@ -526,7 +526,7 @@ class TestInputAttrs():
 
 class TestInsAttrs():
   def test_cite(self) -> None:
-    assert Ins(cite='www.foo.bar/baz/?quux="1"').render_attrs() == 'cite="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Ins(cite='www.foo.bar/baz/?quux="1"').render_attrs() == 'cite="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_datetime(self) -> None:
     assert Ins(datetime="foo").render_attrs() == 'datetime="foo"'
@@ -550,7 +550,7 @@ class TestLinkAttrs():
     assert Link(fetchpriority="foo").render_attrs() == 'fetchpriority="foo"'
 
   def test_href(self) -> None:
-    assert Link(href='www.foo.bar/baz/?quux="1"').render_attrs() == 'href="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Link(href='www.foo.bar/baz/?quux="1"').render_attrs() == 'href="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_hreflang(self) -> None:
     assert Link(hreflang="foo").render_attrs() == 'hreflang="foo"'
@@ -559,7 +559,7 @@ class TestLinkAttrs():
     assert Link(imagesizes="foo").render_attrs() == 'imagesizes="foo"'
 
   def test_imagesrcset(self) -> None:
-    assert Link(imagesrcset='www.foo.bar/baz/?quux="1"').render_attrs() == 'imagesrcset="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Link(imagesrcset='www.foo.bar/baz/?quux="1"').render_attrs() == 'imagesrcset="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_integrity(self) -> None:
     assert Link(integrity="foo").render_attrs() == 'integrity="foo"'
@@ -620,7 +620,7 @@ class TestMeterAttrs():
 
 class TestObjectAttrs():
   def test_data(self) -> None:
-    assert Object(data='www.foo.bar/baz/?quux="1"').render_attrs() == 'data="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Object(data='www.foo.bar/baz/?quux="1"').render_attrs() == 'data="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_form(self) -> None:
     assert Object(form="foo").render_attrs() == 'form="foo"'
@@ -686,7 +686,7 @@ class TestProgressAttrs():
 
 class TestQAttrs():
   def test_cite(self) -> None:
-    assert Q(cite='www.foo.bar/baz/?quux="1"').render_attrs() == 'cite="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Q(cite='www.foo.bar/baz/?quux="1"').render_attrs() == 'cite="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
 class TestScriptAttrs():
   def test_async_(self) -> None:
@@ -714,7 +714,7 @@ class TestScriptAttrs():
     assert Script(referrerpolicy="no-referrer").render_attrs() == 'referrerpolicy="no-referrer"'
 
   def test_src(self) -> None:
-    assert Script(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Script(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_type(self) -> None:
     assert Script(type="foo").render_attrs() == 'type="foo"'
@@ -759,10 +759,10 @@ class TestSourceAttrs():
     assert Source(sizes="foo").render_attrs() == 'sizes="foo"'
 
   def test_src(self) -> None:
-    assert Source(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Source(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_srcset(self) -> None:
-    assert Source(srcset='www.foo.bar/baz/?quux="1"').render_attrs() == 'srcset="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Source(srcset='www.foo.bar/baz/?quux="1"').render_attrs() == 'srcset="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_type(self) -> None:
     assert Source(type="foo").render_attrs() == 'type="foo"'
@@ -870,7 +870,7 @@ class TestTrackAttrs():
     assert Track(label="foo").render_attrs() == 'label="foo"'
 
   def test_src(self) -> None:
-    assert Track(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Track(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_srclang(self) -> None:
     assert Track(srclang="foo").render_attrs() == 'srclang="foo"'
@@ -898,13 +898,13 @@ class TestVideoAttrs():
     assert Video(playsinline=True).render_attrs() == 'playsinline'
 
   def test_poster(self) -> None:
-    assert Video(poster='www.foo.bar/baz/?quux="1"').render_attrs() == 'poster="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Video(poster='www.foo.bar/baz/?quux="1"').render_attrs() == 'poster="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_preload(self) -> None:
     assert Video(preload="auto").render_attrs() == 'preload="auto"'
 
   def test_src(self) -> None:
-    assert Video(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/%3Fquux%3D%221%22"'
+    assert Video(src='www.foo.bar/baz/?quux="1"').render_attrs() == 'src="www.foo.bar/baz/?quux=&quot;1&quot;"'
 
   def test_width(self) -> None:
     assert Video(width="foo").render_attrs() == 'width="foo"'
